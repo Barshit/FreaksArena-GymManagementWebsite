@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+</head>
+<body class="admin-dashboard">
+  <div class="admin-layout">
+    <%- include('partials/sidebar', { active: active }) %>
+
+<div class="main-content">
+      <%- include('partials/topbar', { eyebrow: eyebrow, heading: heading }) %>
+
+<main class="page-content">
+        <section class="welcome-section card">
+          <div class="welcome-copy">
+            <p class="eyebrow">Welcome back</p>
+            <h2>Good to see you, Admin.</h2>
+            <p class="body-text">Manage members, payments, and gym access from one place. This dashboard foundation will expand with future admin tools.</p>
+          </div>
+        </section>
+
+        <section class="summary-cards-section">
+          <div id="summary-cards" class="summary-cards-grid">
+            <div class="summary-card loading">
+              <div class="card-placeholder"></div>
+            </div>
+            <div class="summary-card loading">
+              <div class="card-placeholder"></div>
+            </div>
+            <div class="summary-card loading">
+              <div class="card-placeholder"></div>
+            </div>
+            <div class="summary-card loading">
+              <div class="card-placeholder"></div>
+            </div>
+            <div class="summary-card loading">
+              <div class="card-placeholder"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card quick-actions">
+          <div class="section-header">
+            <h3>Quick Actions</h3>
+          </div>
+          <div class="action-grid">
+            <a href="members.html" class="action-card action-primary">Add Member</a>
+            <a href="members.html" class="action-card">Members</a>
+                <a href="payments.html" class="action-card">Payments</a>
+          </div>
+        </section>
+
+        <section class="card announcements-section">
+          <div class="section-header">
+            <h3>Recent Announcements</h3>
+          </div>
+          <div id="dashboard-announcements" class="announcements-list">
+            <p class="placeholder-text">No announcements available right now.</p>
+          </div>
+        </section>
+
+        <section class="card expiring-soon">
+          <div class="section-header">
+            <h3>Memberships Expiring Soon</h3>
+          </div>
+          <div class="placeholder-box">
+            <p>There are no expiring memberships to show right now.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <%- include('partials/mobile-sidebar', { active: active }) %>
+
+</div>
+  <%- include('partials/scripts', { scripts: scripts }) %>
+</body>
+</html>
+
+
+
+
+
+
+
+

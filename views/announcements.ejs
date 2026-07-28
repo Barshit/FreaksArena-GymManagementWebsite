@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+</head>
+<body class="admin-announcements">
+  <div class="admin-layout">
+    <%- include('partials/sidebar', { active: active }) %>
+
+<div class="main-content">
+      <%- include('partials/topbar', { eyebrow: eyebrow, heading: heading }) %>
+
+<main class="page-content">
+        <section class="card announcements-card">
+          <div class="section-header table-header">
+            <div>
+              <p class="eyebrow">Announcement management</p>
+              <h2>Manage announcements</h2>
+            </div>
+            <button type="button" id="open-new-announcement" class="primary-btn">New Announcement</button>
+          </div>
+
+          <div class="announcements-table-wrapper">
+            <table class="members-table announcement-table" aria-label="Announcements list">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Publish Date</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="announcements-tbody">
+                <tr>
+                  <td colspan="7" class="empty-row">Loading announcements…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <%- include('partials/mobile-sidebar', { active: active }) %>
+
+</div>
+
+  <div id="announcement-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="announcement-modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Announcement form</p>
+          <h2 id="announcement-modal-title">New Announcement</h2>
+        </div>
+        <button type="button" id="close-announcement-modal" class="icon-button" aria-label="Close dialog">✕</button>
+      </div>
+      <form id="announcement-form" class="member-form">
+        <div id="announcement-form-error" class="form-error" aria-live="polite"></div>
+        <div class="form-grid">
+          <label>
+            Announcement ID
+            <input type="text" name="announcementId" readonly />
+          </label>
+          <label>
+            Title
+            <input type="text" name="title" required />
+          </label>
+          <label>
+            Category
+            <select name="category" required>
+              <option value="">Select category</option>
+              <option value="General">General</option>
+              <option value="Event">Event</option>
+              <option value="Offer">Offer</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Notice">Notice</option>
+              <option value="Maintenance">Maintenance</option>
+            </select>
+          </label>
+          <label>
+            Publish Date
+            <input type="date" name="publishDate" required />
+          </label>
+          <label>
+            Priority
+            <select name="priority" required>
+              <option value="Normal">Normal</option>
+              <option value="Important">Important</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </label>
+          <label class="checkbox-label" style="grid-column: 1 / -1;">
+            <span class="checkbox-icon">
+              <input type="checkbox" name="statusActive" checked />
+            </span>
+            <span class="checkbox-text">Active</span>
+          </label>
+          <label style="grid-column: 1 / -1;">
+            Content
+            <textarea name="content" rows="6" required></textarea>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancel-announcement-modal">Cancel</button>
+          <button type="submit" class="primary-btn" id="save-announcement-btn">Save Announcement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <%- include('partials/scripts', { scripts: scripts }) %>
+</body>
+</html>
+
+
+
+
+
+

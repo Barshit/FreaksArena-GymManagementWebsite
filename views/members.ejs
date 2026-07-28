@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+</head>
+<body class="admin-members">
+  <div class="admin-layout">
+    <%- include('partials/sidebar', { active: active }) %>
+
+<div class="main-content">
+      <%- include('partials/topbar', { eyebrow: eyebrow, heading: heading }) %>
+
+<main class="page-content">
+        <section class="card members-list-card">
+          <div class="section-header table-header">
+            <div>
+              <p class="eyebrow">Member directory</p>
+              <h2>Active members</h2>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+              <input id="member-search" type="search" placeholder="Search by name, phone, or member ID" />
+              <button id="open-add-member" class="primary-btn">Add Member</button>
+            </div>
+          </div>
+
+          <div class="members-table-wrapper">
+            <table class="members-table" aria-label="Members list">
+              <thead>
+                <tr>
+                  <th>Member ID</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Membership Plan</th>
+                  <th>Birthday</th>
+                  <th>Joining Date</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                   </tr>
+              </thead>
+              <tbody id="members-tbody">
+                <tr>
+                                <td colspan="9" class="empty-row">Loading members…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <%- include('partials/mobile-sidebar', { active: active }) %>
+
+</div>
+
+  <div id="member-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="member-modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Member form</p>
+          <h2 id="member-modal-title">Add Member</h2>
+        </div>
+        <button type="button" id="close-member-modal" class="icon-button" aria-label="Close dialog">✕</button>
+      </div>
+      <form id="member-form" class="member-form">
+        <div id="member-form-error" class="form-error" aria-live="polite"></div>
+        <div class="form-grid">
+          <label>
+            Member ID
+            <input type="text" name="memberId" required placeholder="FA001" />
+          </label>
+          <label>
+            Full Name
+            <input type="text" name="fullName" required />
+          </label>
+          <label>
+            Phone Number
+            <input type="tel" name="phone" required placeholder="1234567890" />
+          </label>
+          <label>
+            Gender
+            <select name="gender" required>
+              <option value="">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label>
+            Membership Plan
+            <select name="plan" required>
+              <option value="">Select plan</option>
+              <option value="Basic">Basic</option>
+              <option value="Standard">Premium</option>
+              <option value="Premium">Elite</option>
+              <option value="Premium">Vip</option>
+            </select>
+          </label>
+          <label>
+            Joining Date
+            <input type="date" name="joiningDate" required />
+          </label>
+          <label>
+            Expiry Date
+            <input type="date" name="expiryDate" required />
+          </label>
+          <label>
+            Birthday
+            <input type="date" name="birthday" />
+          </label>
+          <label>
+            Amount Paid
+            <input type="number" name="amountPaid" min="0" step="0.01" required />
+          </label>
+          <label>
+            Payment Method
+            <select name="paymentMethod" required>
+              <option value="">Select method</option>
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Card">Card</option>
+            </select>
+          </label>
+          <label>
+            Payment Status
+            <select name="paymentStatus" required>
+              <option value="">Select status</option>
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </label>
+          <label class="checkbox-label" style="grid-column: 1 / -1;">
+            <span class="checkbox-icon">
+              <input type="checkbox" name="sendWhatsapp" checked />
+            </span>
+            <span class="checkbox-text">Send Welcome Message on WhatsApp</span>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancel-member-modal">Cancel</button>
+          <button type="submit" class="primary-btn">Save Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="renew-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="renew-modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Renew membership</p>
+          <h2 id="renew-modal-title">Renew Member</h2>
+        </div>
+        <button type="button" id="close-renew-modal" class="icon-button" aria-label="Close dialog">✕</button>
+      </div>
+      <form id="renew-form" class="member-form">
+        <p class="body-text">Renewing this member will extend the expiry date by 30 days from the current expiry.</p>
+        <div id="renew-form-error" class="form-error" aria-live="polite"></div>
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancel-renew-modal">Cancel</button>
+          <button type="submit" class="primary-btn">Confirm Renewal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="pause-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="pause-modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Pause membership</p>
+          <h2 id="pause-modal-title">Pause Member</h2>
+        </div>
+        <button type="button" id="close-pause-modal" class="icon-button" aria-label="Close dialog">✕</button>
+      </div>
+      <form id="pause-form" class="member-form">
+        <div id="pause-form-error" class="form-error" aria-live="polite"></div>
+        <div class="form-grid">
+          <label>
+            Pause Start Date
+            <input type="date" name="pauseStartDate" required />
+          </label>
+          <label>
+            Pause End Date
+            <input type="date" name="pauseEndDate" required />
+          </label>
+          <label style="grid-column: 1 / -1;">
+            Pause Reason (Optional)
+            <textarea name="pauseReason" placeholder="E.g., Travel, Medical, Personal"></textarea>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancel-pause-modal">Cancel</button>
+          <button type="submit" class="primary-btn">Pause Membership</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <%- include('partials/scripts', { scripts: scripts }) %>
+</body>
+</html>
+
+
+
+
+
+
+
+

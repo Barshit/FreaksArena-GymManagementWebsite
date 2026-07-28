@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+</head>
+<body class="admin-payments">
+  <div class="admin-layout">
+    <%- include('partials/sidebar', { active: active }) %>
+
+<div class="main-content">
+      <%- include('partials/topbar', { eyebrow: eyebrow, heading: heading }) %>
+
+<main class="page-content">
+        <section class="card payment-history-card">
+          <div class="section-header table-header">
+            <div>
+              <p class="eyebrow">Membership payments</p>
+              <h2>Payment history</h2>
+            </div>
+            <button id="open-record-payment" class="primary-btn">Record Payment</button>
+          </div>
+
+          <div class="payments-table-wrapper">
+            <table class="payments-table" aria-label="Payment history table">
+              <thead>
+                <tr>
+                  <th>Member ID</th>
+                  <th>Member Name</th>
+                  <th>Amount</th>
+                  <th>Payment Method</th>
+                  <th>Payment Date</th>
+                  <th>Payment Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="payments-tbody">
+                <tr>
+                  <td colspan="7" class="empty-row">Loading payment history…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <%- include('partials/mobile-sidebar', { active: active }) %>
+
+</div>
+
+  <div id="payment-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Record payment</p>
+          <h2 id="payment-modal-title">Record a new payment</h2>
+        </div>
+        <button type="button" id="close-payment-modal" class="icon-button" aria-label="Close dialog">✕</button>
+      </div>
+      <form id="payment-form" class="payment-form">
+        <div id="payment-form-error" class="form-error" aria-live="polite"></div>
+        <div class="form-grid">
+          <label>
+            Select Member
+            <select name="memberId" required>
+              <option value="">Select member</option>
+            </select>
+          </label>
+          <label>
+            Search Member
+            <input type="text" id="payment-member-search" placeholder="Search by name, phone, or member ID" />
+          </label>
+          <div id="payment-member-info" class="payment-member-info hidden" style="grid-column: 1 / -1;">
+            <div>
+              <strong id="payment-member-name">Member:</strong>
+            </div>
+            <div>
+              <span id="payment-member-phone">Phone: —</span>
+              <span id="payment-member-plan" style="margin-left:1rem;">Plan: —</span>
+            </div>
+            <div>
+              <span id="payment-member-expiry">Expiry: —</span>
+            </div>
+          </div>
+          <label>
+            Payment Amount
+            <input type="number" name="amount" min="0" step="0.01" required />
+          </label>
+          <label>
+            Payment Date
+            <input type="date" name="date" required />
+          </label>
+          <label>
+            Payment Method
+            <select name="method" required>
+              <option value="">Select method</option>
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Card">Card</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+          </label>
+          <label>
+            Payment Type
+            <select name="type" required>
+              <option value="">Select type</option>
+              <option value="Monthly Fee">Monthly Fee</option>
+              <option value="Membership Renewal">Membership Renewal</option>
+              <option value="Admission Fee">Admission Fee</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label>
+            Payment Status
+            <select name="status" required>
+              <option value="">Select status</option>
+              <option value="completed">Paid</option>
+              <option value="pending">Pending</option>
+            </select>
+          </label>
+          <label style="grid-column: 1 / -1;">
+            Notes
+            <textarea name="notes" rows="4" placeholder="Optional notes"></textarea>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancel-payment-modal">Cancel</button>
+          <button type="submit" class="primary-btn">Save Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <%- include('partials/scripts', { scripts: scripts }) %>
+</body>
+</html>
+
+
+
+
+
+

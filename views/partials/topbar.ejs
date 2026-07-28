@@ -1,0 +1,39 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Open navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <div>
+      <p class="eyebrow"><%= eyebrow %></p>
+      <h1><%= heading %></h1>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div id="current-date" class="topbar-item current-date" aria-live="polite"></div>
+
+    <div class="topbar-item dropdown">
+      <button id="notifications-btn" class="icon-button" aria-haspopup="true" aria-expanded="false">
+        <span class="bell-icon" aria-hidden="true">🔔</span>
+        <span class="button-label">Notifications</span>
+      </button>
+      <div id="notifications-menu" class="dropdown-menu" role="menu" aria-label="Notifications menu">
+        <p class="dropdown-empty">No new notifications.</p>
+      </div>
+    </div>
+
+    <div class="topbar-item dropdown profile-dropdown">
+      <button id="profile-btn" class="profile-button" aria-haspopup="true" aria-expanded="false">
+        <span class="profile-avatar">A</span>
+        <span class="profile-name">Admin</span>
+      </button>
+      <div id="profile-menu" class="dropdown-menu" role="menu" aria-label="Profile menu">
+        <a href="/profile" class="dropdown-link">Profile</a>
+        <a href="/account" class="dropdown-link">Account</a>
+        <a href="/logout" class="dropdown-link">Logout</a>
+      </div>
+    </div>
+  </div>
+</header>

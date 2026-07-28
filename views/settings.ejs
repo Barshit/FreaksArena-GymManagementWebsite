@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+  <style>
+    .settings-form {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .form-section {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 2rem;
+    }
+
+    .form-section:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 1rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .form-grid label {
+      display: grid;
+      gap: 0.35rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .form-grid input,
+    .form-grid textarea,
+    .form-grid select {
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 0.95rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fafc;
+      font-size: 1rem;
+    }
+
+    .form-grid textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-grid input:focus,
+    .form-grid textarea:focus,
+    .form-grid select:focus {
+      outline: 2px solid rgba(249, 115, 22, 0.25);
+      outline-offset: 2px;
+    }
+
+    .form-grid input[type="time"] {
+      font-size: 1rem;
+    }
+
+    .form-grid input[type="checkbox"],
+    .form-grid input[type="radio"] {
+      width: auto;
+      margin-right: 0.5rem;
+    }
+
+    .checkbox-group,
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .checkbox-item,
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-error {
+      min-height: 1.2rem;
+      color: #fca5a5;
+      font-size: 0.95rem;
+    }
+
+    .success-message {
+      color: #86efac;
+      font-size: 0.95rem;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 880px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="admin-settings">
+  <div class="admin-layout">
+    <%- include('partials/sidebar', { active: active }) %>
+
+    <div class="main-content">
+      <%- include('partials/topbar', { eyebrow: eyebrow, heading: heading }) %>
+
+      <main class="page-content">
+        <section class="card">
+          <div class="section-header back-header">
+            <div>
+              <p class="eyebrow">System Settings</p>
+              <h2>Manage gym and system configurations</h2>
+            </div>
+          </div>
+
+          <p class="body-text">Update your gym information, membership settings, payment preferences, and system configuration.</p>
+
+          <form id="settings-form" class="settings-form" novalidate>
+            <div id="settings-message" class="success-message" aria-live="polite"></div>
+            <div id="settings-error" class="form-error" aria-live="assertive"></div>
+
+            <!-- Gym Information Section -->
+            <div class="form-section">
+              <h3 class="section-title">Gym Information</h3>
+              <div class="form-grid">
+                <label>
+                  Gym Name
+                  <input type="text" name="gymName" required />
+                </label>
+                <label>
+                  Owner Name
+                  <input type="text" name="ownerName" required />
+                </label>
+                <label>
+                  Phone Number
+                  <input type="tel" name="phone" required />
+                </label>
+                <label>
+                  Email Address
+                  <input type="email" name="email" required />
+                </label>
+                <label style="grid-column: 1 / -1;">
+                  Complete Address
+                  <textarea name="address" required></textarea>
+                </label>
+                <label>
+                  Opening Time
+                  <input type="time" name="openingTime" required />
+                </label>
+                <label>
+                  Closing Time
+                  <input type="time" name="closingTime" required />
+                </label>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="save-gym-info">Save Gym Info</button>
+              </div>
+            </div>
+
+            <!-- Membership Settings Section -->
+            <div class="form-section">
+              <h3 class="section-title">Membership Settings</h3>
+              <div class="form-grid">
+                <label>
+                  Default Membership Duration (Days)
+                  <input type="number" name="defaultMembershipDuration" min="1" max="365" required />
+                </label>
+                <label>
+                  Membership Expiry Reminder (Days)
+                  <input type="number" name="membershipExpiryReminderDays" min="1" max="365" required />
+                </label>
+                <label>
+                  Max Membership Pause (Days)
+                  <input type="number" name="maxMembershipPauseDays" min="1" max="365" required />
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; grid-column: 1 / -1;">
+                  <span>Allow Membership Pause</span>
+                  <input type="checkbox" name="allowMembershipPause" />
+                </label>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="save-membership-settings">Save Membership Settings</button>
+              </div>
+            </div>
+
+            <!-- Payment Settings Section -->
+            <div class="form-section">
+              <h3 class="section-title">Payment Settings</h3>
+              <div class="form-grid">
+                <label>
+                  Default Currency
+                  <select name="defaultCurrency" required>
+                    <option value="INR">Indian Rupee (INR)</option>
+                    <option value="USD">US Dollar (USD)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                  </select>
+                </label>
+                <label style="grid-column: 1 / -1;">
+                  Accepted Payment Methods
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input type="checkbox" name="paymentMethods" value="Cash" />
+                      <span>Cash</span>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" name="paymentMethods" value="UPI" />
+                      <span>UPI</span>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" name="paymentMethods" value="Card" />
+                      <span>Card</span>
+                    </div>
+                    <div class="checkbox-item">
+                      <input type="checkbox" name="paymentMethods" value="Bank Transfer" />
+                      <span>Bank Transfer</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="save-payment-settings">Save Payment Settings</button>
+              </div>
+            </div>
+
+            <!-- System Settings Section -->
+            <div class="form-section">
+              <h3 class="section-title">System Settings</h3>
+              <div class="form-grid">
+                <label>
+                  Timezone
+                  <input type="text" name="timezone" placeholder="e.g., Asia/Kolkata" />
+                </label>
+                <label>
+                  Date Format
+                  <select name="dateFormat" required>
+                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                  </select>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; grid-column: 1 / -1;">
+                  <span>Auto-update Expired Memberships</span>
+                  <input type="checkbox" name="autoUpdateExpiredMemberships" />
+                </label>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="save-system-settings">Save System Settings</button>
+              </div>
+            </div>
+
+            <!-- Change Password Section -->
+            <div class="form-section">
+              <h3 class="section-title">Security Settings</h3>
+              <div class="form-grid">
+                <label style="grid-column: 1 / -1;">
+                  Current Password
+                  <input type="password" name="currentPassword" id="current-password" />
+                </label>
+                <label style="grid-column: 1 / -1;">
+                  New Password
+                  <input type="password" name="newPassword" id="new-password" />
+                </label>
+                <label style="grid-column: 1 / -1;">
+                  Confirm New Password
+                  <input type="password" name="confirmPassword" id="confirm-password" />
+                </label>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="change-password-btn">Change Password</button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <%- include('partials/mobile-sidebar', { active: active }) %>
+
+  </div>
+  <%- include('partials/scripts', { scripts: scripts }) %>
+</body>
+</html>
+
+

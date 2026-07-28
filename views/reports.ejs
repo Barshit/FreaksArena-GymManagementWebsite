@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+</head>
+<body class="admin-reports">
+  <div class="admin-layout">
+    <%- include('partials/sidebar', { active: active }) %>
+
+    <div class="main-content">
+      <%- include('partials/topbar', { eyebrow: eyebrow, heading: heading }) %>
+
+      <main class="page-content reports-content">
+        <!-- Refresh and Export Buttons -->
+        <div class="page-actions">
+          <button class="btn btn-secondary" id="refresh-reports">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6"></path>
+              <path d="M20.49 15a9 9 0 1 1-2-8.83"></path>
+            </svg>
+            Refresh
+          </button>
+          <button class="btn btn-secondary" id="export-pdf-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Export PDF
+          </button>
+          <button class="btn btn-secondary" id="export-excel-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Export Excel
+          </button>
+        </div>
+
+        <!-- Filter Section -->
+        <section class="report-section">
+          <div class="filter-section">
+            <label for="report-filter">Filter by:</label>
+            <select id="report-filter" class="form-control">
+              <option value="month">This Month</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="year">This Year</option>
+              <option value="custom">Custom Date Range</option>
+            </select>
+            <div id="custom-date-range" style="display: none;">
+              <input type="date" id="custom-start-date" class="form-control" placeholder="Start Date">
+              <input type="date" id="custom-end-date" class="form-control" placeholder="End Date">
+            </div>
+          </div>
+        </section>
+
+        <!-- Monthly Revenue Report -->
+        <section class="report-section">
+          <div class="section-header">
+            <h2>Monthly Revenue Report</h2>
+            <div class="filter-group">
+              <select id="revenue-month" class="form-control">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+              <select id="revenue-year" class="form-control"></select>
+            </div>
+          </div>
+          <div class="report-cards" id="monthly-revenue-cards">
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Revenue Report (Date Range) -->
+        <section class="report-section">
+          <div class="section-header">
+            <h2>Revenue Report</h2>
+          </div>
+          <div class="report-cards" id="revenue-cards">
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Membership Report -->
+        <section class="report-section">
+          <div class="section-header">
+            <h2>Membership Report</h2>
+          </div>
+          <div class="report-cards" id="membership-cards">
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Payment Report -->
+        <section class="report-section">
+          <div class="section-header">
+            <h2>Payment Report</h2>
+          </div>
+          <div class="report-cards" id="payment-cards">
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+            <div class="report-card loading-placeholder">
+              <div class="card-skeleton"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Report Charts -->
+        <section class="report-section">
+          <div class="section-header">
+            <h2>Report Charts</h2>
+          </div>
+          <div class="report-cards">
+            <div class="report-card">
+              <div class="card-label">Monthly Revenue</div>
+              <div style="height: 280px;">
+                <canvas id="monthly-revenue-chart"></canvas>
+              </div>
+            </div>
+            <div class="report-card">
+              <div class="card-label">Member Growth</div>
+              <div style="height: 280px;">
+                <canvas id="member-growth-chart"></canvas>
+              </div>
+            </div>
+            <div class="report-card">
+              <div class="card-label">Plan Distribution</div>
+              <div style="height: 280px;">
+                <canvas id="plan-distribution-chart"></canvas>
+              </div>
+            </div>
+            <div class="report-card">
+              <div class="card-label">Payment Method Distribution</div>
+              <div style="height: 280px;">
+                <canvas id="payment-method-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <%- include('partials/mobile-sidebar', { active: active }) %>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <%- include('partials/scripts', { scripts }) %>
+</body>
+</html>

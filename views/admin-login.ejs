@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+</head>
+<body class="admin-login-page">
+  <main class="login-page">
+    <div class="login-panel">
+      <div class="login-brand">
+        <div class="brand-mark">FA</div>
+        <div>
+          <h1>Freaks Arena Admin</h1>
+          <p>Sign in to manage the gym membership dashboard.</p>
+        </div>
+      </div>
+
+      <form class="login-form" action="/admin-login" method="POST">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="admin@example.com" value="<%= typeof email !== 'undefined' ? email : '' %>" required />
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" required />
+
+        <% if (typeof message !== 'undefined' && message) { %>
+          <div class="login-error"><%= message %></div>
+        <% } %>
+
+        <button type="submit" class="primary-btn">Sign in</button>
+      </form>
+
+      <p class="login-hint">Use your admin credentials to continue.</p>
+    </div>
+  </main>
+  <%- include('partials/scripts', { scripts: scripts }) %>
+</body>
+</html>
+
+
+
+
+

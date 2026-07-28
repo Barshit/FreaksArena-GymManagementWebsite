@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head', { title, styles, extraHead }) %>
+  <style>
+    .filters-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 1.25rem;
+    }
+
+    .filter-group {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .filter-group label {
+      font-weight: 600;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 0.95rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fafc;
+      font-size: 0.95rem;
+    }
+
+    .filter-group input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .logs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    .logs-table thead {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .logs-table th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #e2e8f0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.95rem;
+    }
+
+    .logs-table td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .logs-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .action-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .action-login { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+    .action-logout { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .action-password { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; }
+    .action-update { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+    .action-add { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+    .action-delete { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+    .module-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.35rem;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+
+    .status-success { color: #86efac; }
+    .status-failed { color: #fca5a5; }
+
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .pagination-container button {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fafc;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .pagination-container button:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .pagination-container button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .page-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.5rem;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .page-number.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #94a3b8;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #cbd5e1;
+    }
+
+    .error-message {
+      padding: 1rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 0.75rem;
+      color: #fca5a5;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 1024px) {
+      .filters-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .logs-table {
+        font-size: 0.85rem;
+      }
+
+      .logs-table th,
+      .logs-table td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .filters-container {
+        grid-template-columns: 1fr;
+      }
+
+      .logs-table {
+        font-size: 0.75rem;
+      }
+
+      .logs-table th,
+      .logs-table td {
+        padding: 0.5rem;
+      }
+
+      .action-badge,
+      .module-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.35rem;
+      }
+    }
+  </style>
+</head>
+<body class="admin-activity-logs">
+  <div class="admin-layout">
+    <%- include('partials/sidebar', { active: active }) %>
+
+    <div class="main-content">
+      <%- include('partials/topbar', { eyebrow: eyebrow, heading: heading }) %>
+
+      <main class="page-content">
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">System monitoring</p>
+              <h2>Activity Logs</h2>
+            </div>
+          </div>
+
+          <div id="error-container"></div>
+
+          <div class="filters-container">
+            <div class="filter-group">
+              <label>Search</label>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search by description, record ID, or admin name..."
+              />
+            </div>
+
+            <div class="filter-group">
+              <label>Action</label>
+              <select id="action-filter">
+                <option value="">All Actions</option>
+                <option value="login">Login</option>
+                <option value="logout">Logout</option>
+                <option value="password_change">Password Change</option>
+                <option value="profile_update">Profile Update</option>
+                <option value="member_added">Member Added</option>
+                <option value="member_edited">Member Edited</option>
+                <option value="member_deleted">Member Deleted</option>
+                <option value="membership_renewed">Membership Renewed</option>
+                <option value="membership_paused">Membership Paused</option>
+                <option value="membership_resumed">Membership Resumed</option>
+                <option value="payment_created">Payment Created</option>
+                <option value="payment_updated">Payment Updated</option>
+                <option value="payment_deleted">Payment Deleted</option>
+                <option value="announcement_created">Announcement Created</option>
+                <option value="announcement_updated">Announcement Updated</option>
+                <option value="announcement_deleted">Announcement Deleted</option>
+                <option value="settings_updated">Settings Updated</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Module</label>
+              <select id="module-filter">
+                <option value="">All Modules</option>
+                <option value="auth">Authentication</option>
+                <option value="admin">Admin</option>
+                <option value="member">Members</option>
+                <option value="membership">Membership</option>
+                <option value="payment">Payments</option>
+                <option value="announcement">Announcements</option>
+                <option value="settings">Settings</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Start Date</label>
+              <input type="date" id="start-date-filter" />
+            </div>
+
+            <div class="filter-group">
+              <label>End Date</label>
+              <input type="date" id="end-date-filter" />
+            </div>
+
+            <div class="filter-group">
+              <label>&nbsp;</label>
+              <button id="clear-filters-btn" class="secondary-btn">Clear Filters</button>
+            </div>
+          </div>
+
+          <div id="logs-container">
+            <div class="loading">Loading activity logs...</div>
+          </div>
+
+          <div class="pagination-container" id="pagination-container" style="display: none;"></div>
+        </section>
+      </main>
+    </div>
+
+    <%- include('partials/mobile-sidebar', { active: active }) %>
+  </div>
+
+  <%- include('partials/scripts', { scripts: scripts }) %>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<div id="mobile-sidebar" class="mobile-sidebar" aria-hidden="true">
+  <div class="mobile-sidebar-header">
+    <span>Navigation</span>
+    <button id="mobile-sidebar-close" class="icon-button" aria-label="Close navigation">✕</button>
+  </div>
+  <nav class="mobile-sidebar-nav" aria-label="Mobile admin navigation">
+    <a href="/dashboard" class="sidebar-link <%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+    <a href="/members" class="sidebar-link <%= active === 'members' ? 'active' : '' %>">Members</a>
+    <a href="/payments" class="sidebar-link <%= active === 'payments' ? 'active' : '' %>">Payments</a>
+    <a href="/reports" class="sidebar-link <%= active === 'reports' ? 'active' : '' %>">Reports</a>
+    <a href="/announcements" class="sidebar-link <%= active === 'announcements' ? 'active' : '' %>">Announcements</a>
+    <a href="/activity-logs" class="sidebar-link <%= active === 'activity-logs' ? 'active' : '' %>">Activity Logs</a>
+    <a href="/settings" class="sidebar-link <%= active === 'settings' ? 'active' : '' %>">Settings</a>
+  </nav>
+</div>
+<div id="mobile-sidebar-backdrop" class="sidebar-backdrop"></div>
