@@ -1,6 +1,46 @@
 const topBtn = document.getElementById("topBtn");
 const navbar = document.querySelector(".navbar");
 
+/* ============================
+   Triple-click Admin Login shortcut on "UNLEASH" text
+   ============================ */
+(function initTripleClickAdminShortcut() {
+  const unleashText = document.getElementById("unleash-text");
+  if (!unleashText) return;
+
+  let clickCount = 0;
+  let clickTimer = null;
+  const CLICK_TIMEOUT = 1000; // 1 second window for triple-click
+  const REQUIRED_CLICKS = 3;
+
+  unleashText.addEventListener("click", function(e) {
+    // Prevent default behavior only on triple-click
+    clickCount++;
+
+    // Clear previous timer if exists
+    if (clickTimer) {
+      clearTimeout(clickTimer);
+    }
+
+    // Set new timer to reset click count
+    clickTimer = setTimeout(() => {
+      clickCount = 0;
+    }, CLICK_TIMEOUT);
+
+    // Check if triple-click achieved
+    if (clickCount === REQUIRED_CLICKS) {
+      // Reset click count
+      clickCount = 0;
+      if (clickTimer) {
+        clearTimeout(clickTimer);
+      }
+
+      // Redirect to admin login
+      window.location.href = "/admin-login";
+    }
+  });
+})();
+
 // Single scroll listener drives both the "scroll to top" button visibility
 // and the navbar's scrolled-state background.
 window.addEventListener("scroll", () => {
