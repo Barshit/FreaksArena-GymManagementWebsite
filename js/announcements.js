@@ -285,17 +285,25 @@
       return;
     }
     if (action === 'delete') {
-      if (window.confirm('Are you sure you want to delete this announcement?')) {
-        try {
-          const response = await fetch(`/api/announcements/${id}`, { method: 'DELETE' });
-          if (!response.ok) {
-            throw new Error('Failed to delete announcement');
+      if (window.ConfirmDialog) {
+        window.ConfirmDialog.show(
+          'Delete Announcement',
+          'Are you sure you want to delete this announcement?',
+          async function () {
+            try {
+              const response = await fetch(`/api/announcements/${id}`, { method: 'DELETE' });
+              if (!response.ok) {
+                throw new Error('Failed to delete announcement');
+              }
+              await renderAnnouncementsTable();
+            } catch (error) {
+              console.error('Error deleting announcement:', error);
+              alert('Failed to delete announcement.');
+            }
           }
-          await renderAnnouncementsTable();
-        } catch (error) {
-          console.error('Error deleting announcement:', error);
-          alert('Failed to delete announcement.');
-        }
+        );
+      } else {
+        console.error('ConfirmDialog not available');
       }
     }
   }

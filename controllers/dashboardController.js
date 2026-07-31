@@ -74,6 +74,7 @@ async function getDashboardStats(req, res) {
 
     let expiringCount = 0;
     let expiredCount = 0;
+    const expiringMembers = [];
 
     for (const member of allMembers) {
       const status = getMemberStatus(member);
@@ -90,8 +91,22 @@ async function getDashboardStats(req, res) {
         expiredCount += 1;
       } else if (expiryDate >= today && expiryDate < sevenDaysFromNow) {
         expiringCount += 1;
+        const daysRemaining = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+        expiringMembers.push({
+          _id: member._id,
+          fullName: member.fullName,
+          plan: member.plan,
+          expiryDate: member.expiryDate,
+          daysRemaining: daysRemaining,
+        });
       }
     }
+
+    // Sort expiring members by nearest expiry date first
+    expiringMembers.sort((a, b) => a.daysRemaining - b.daysRemaining);
+
+    // Limit to 5 members for display
+    const expiringMembersList = expiringMembers.slice(0, 5);
 
     // Pending Payments - Assume "pending" status payments
     const pendingPaymentsResult = await Payment.countDocuments({
@@ -135,6 +150,7 @@ async function getDashboardStats(req, res) {
       pendingPayments: pendingPaymentsResult,
       birthdaysToday: birthdayCount,
       announcements: activeAnnouncements,
+      expiringMembers: expiringMembersList,
     });
   } catch (error) {
     console.error(`[Admin ${req.session.adminId}] Error fetching dashboard stats:`, error);

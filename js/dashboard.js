@@ -99,10 +99,11 @@
     }
 
     let membersCache = [];
+    let lastNotificationHash = '';
 
     async function fetchMembers() {
       try {
-        const response = await fetch('/api/members');
+        const response = await fetch('/api/members?t=' + Date.now());
         if (!response.ok) {
           throw new Error(`Failed to load members (${response.status})`);
         }
@@ -112,6 +113,15 @@
         membersCache = [];
       }
       return membersCache;
+    }
+
+    function generateNotificationHash(birthdays, expiringSoon, expired) {
+      const ids = [
+        ...birthdays.map(m => m._id),
+        ...expiringSoon.map(e => e.member._id + '|' + e.daysLeft),
+        ...expired.map(e => e.member._id + '|' + e.daysSince)
+      ].sort().join(',');
+      return ids;
     }
 
     function getMembersFromCache() {
@@ -178,6 +188,16 @@
       const expired = getExpiredNotifications();
 
       const total = birthdays.length + expiringSoon.length + expired.length;
+
+      // generate hash to detect changes
+      const currentHash = generateNotificationHash(birthdays, expiringSoon, expired);
+
+      // if hash hasn't changed, skip UI update (prevent duplicate renders)
+      if (currentHash === lastNotificationHash) {
+        return;
+      }
+
+      lastNotificationHash = currentHash;
 
       // update badge
       if (total > 0) {
@@ -313,6 +333,11 @@
     window.addEventListener('members-updated', function () {
       buildNotificationMenu();
     });
+
+    // automatic polling for notification updates every 25 seconds
+    setInterval(function () {
+      buildNotificationMenu();
+    }, 25000);
   }
 
   if (logoutBtn) {

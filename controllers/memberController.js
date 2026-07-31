@@ -1,4 +1,5 @@
 const Member = require('../models/Member');
+const Payment = require('../models/Payment');
 const mongoose = require('mongoose');
 
 const VALID_GENDERS = ['Male', 'Female', 'Other'];
@@ -189,6 +190,15 @@ const createMember = async (req, res) => {
       createdBy: req.session.adminId,
     });
 
+    await Payment.create({
+      member: member._id,
+      amount: payload.amountPaid,
+      method: payload.paymentMethod.toLowerCase(),
+      status: payload.paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
+      membershipPlan: payload.plan,
+      recordedBy: req.session.adminId,
+    });
+
     // Log member creation activity
     if (req.logActivity) {
       await req.logActivity({
@@ -313,6 +323,21 @@ const renewMember = async (req, res) => {
     nextExpiry.setUTCHours(0, 0, 0, 0);
     member.expiryDate = nextExpiry;
     await member.save();
+
+    const payload = parseMemberPayload(req.body);
+    const amountPaid = Number.isNaN(payload.amountPaid) ? 0 : payload.amountPaid;
+    const paymentMethod = payload.paymentMethod || 'Cash';
+    const paymentStatus = payload.paymentStatus || 'Paid';
+
+    await Payment.create({
+      member: member._id,
+      amount: amountPaid,
+      method: paymentMethod.toLowerCase(),
+      status: paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
+      membershipPlan: member.plan,
+      recordedBy: req.session.adminId,
+      notes: 'Membership renewal',
+    });
 
     // Log membership renewal activity
     if (req.logActivity) {

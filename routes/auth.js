@@ -1,6 +1,7 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 const { redirectIfAuthenticated } = require('../middleware/authMiddleware');
+const { loginRateLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.use((req, res, next) => {
 });
 
 router.get(['/admin-login', '/admin-login.html'], redirectIfAuthenticated, authController.renderLogin);
-router.post('/admin-login', redirectIfAuthenticated, authController.login);
+router.post('/admin-login', redirectIfAuthenticated, loginRateLimiter, authController.login);
 router.get('/logout', authController.logout);
 
 module.exports = router;

@@ -59,7 +59,7 @@ const pages = {
     data: {
       title: 'Members | Freaks Arena Gym',
       styles: ['/css/dashboard.css', '/css/members.css'],
-      scripts: ['/js/dashboard.js', '/js/members.js'],
+      scripts: ['/js/dashboard.js', '/js/members.js', '/js/confirm-dialog.js'],
       bodyClass: 'admin-members',
       active: 'members',
       eyebrow: 'Admin dashboard',
@@ -71,7 +71,7 @@ const pages = {
     data: {
       title: 'Member Details | Freaks Arena Gym',
       styles: ['/css/dashboard.css', '/css/members.css'],
-      scripts: ['/js/dashboard.js', '/js/members.js'],
+      scripts: ['/js/dashboard.js', '/js/members.js', '/js/confirm-dialog.js'],
       bodyClass: 'admin-member-details',
       active: 'members',
       eyebrow: 'Admin dashboard',
@@ -83,7 +83,7 @@ const pages = {
     data: {
       title: 'Payments | Freaks Arena Gym',
       styles: ['/css/dashboard.css', '/css/payments.css'],
-      scripts: ['/js/dashboard.js', '/js/payments.js'],
+      scripts: ['/js/dashboard.js', '/js/payments.js', '/js/confirm-dialog.js'],
       bodyClass: 'admin-payments',
       active: 'payments',
       eyebrow: 'Admin dashboard',
@@ -107,7 +107,7 @@ const pages = {
     data: {
       title: 'Announcements | Freaks Arena Gym',
       styles: ['/css/dashboard.css'],
-      scripts: ['/js/dashboard.js', '/js/announcements.js'],
+      scripts: ['/js/dashboard.js', '/js/announcements.js', '/js/confirm-dialog.js'],
       bodyClass: 'admin-announcements',
       active: 'announcements',
       eyebrow: 'Admin dashboard',

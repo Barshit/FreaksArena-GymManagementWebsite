@@ -1,6 +1,7 @@
 (function () {
   const SUMMARY_CARDS_ID = 'summary-cards';
   const ANNOUNCEMENTS_LIST_ID = 'dashboard-announcements';
+  const EXPIRING_SOON_ID = 'expiring-soon-list';
 
   async function fetchDashboardStats() {
     try {
@@ -121,10 +122,43 @@
         `
         )
         .join('');
+    } else if (announcementsContainer) {
+      announcementsContainer.innerHTML = '<p class="placeholder-text">No announcements available right now.</p>';
+    }
+
+    // Render expiring members
+    const expiringSoonContainer = document.getElementById(EXPIRING_SOON_ID);
+    if (expiringSoonContainer && stats.expiringMembers && stats.expiringMembers.length > 0) {
+      expiringSoonContainer.innerHTML = stats.expiringMembers
+        .map(
+          (member) => `
+          <div class="expiring-member-item">
+            <div class="expiring-member-info">
+              <div class="expiring-member-name">${escapeHtml(member.fullName)}</div>
+              <div class="expiring-member-details">
+                <span class="plan">${escapeHtml(member.plan)}</span>
+                <span class="expiry-date">Expires: ${formatDate(member.expiryDate)}</span>
+              </div>
+            </div>
+            <div class="expiring-member-status">
+              <span class="days-remaining">${member.daysRemaining} day(s)</span>
+              <span class="status-badge">Expiring Soon</span>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+    } else if (expiringSoonContainer) {
+      expiringSoonContainer.innerHTML = '<p class="placeholder-text">There are no expiring memberships to show right now.</p>';
     }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     renderDashboardStats();
+
+    // automatic polling for dashboard stats updates every 30 seconds
+    setInterval(function () {
+      renderDashboardStats();
+    }, 30000);
   });
 })();

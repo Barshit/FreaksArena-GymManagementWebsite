@@ -156,6 +156,29 @@
       <form id="renew-form" class="member-form">
         <p class="body-text">Renewing this member will extend the expiry date by 30 days from the current expiry.</p>
         <div id="renew-form-error" class="form-error" aria-live="polite"></div>
+        <div class="form-grid">
+          <label>
+            Amount Paid
+            <input type="number" name="amountPaid" min="0" step="0.01" required />
+          </label>
+          <label>
+            Payment Method
+            <select name="paymentMethod" required>
+              <option value="">Select method</option>
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Card">Card</option>
+            </select>
+          </label>
+          <label>
+            Payment Status
+            <select name="paymentStatus" required>
+              <option value="">Select status</option>
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </label>
+        </div>
         <div class="modal-actions">
           <button type="button" class="secondary-btn" id="cancel-renew-modal">Cancel</button>
           <button type="submit" class="primary-btn">Confirm Renewal</button>
@@ -196,6 +219,8 @@
       </form>
     </div>
   </div>
+
+  <%- include('partials/confirm-modal') %>
   <%- include('partials/scripts', { scripts: scripts }) %>
 </body>
 </html>

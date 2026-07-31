@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const helmet = require('helmet');
 const pagesRouter = require('./routes/pages');
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
@@ -22,6 +23,9 @@ const errorHandler = require('./middleware/errorHandler');
 const { logActivity } = require('./utils/activityLogger');
 
 const app = express();
+
+// Security headers with production-safe defaults
+app.use(helmet());
 
 app.set('view engine', 'ejs');
 app.set('views', appConfig.viewsPath);

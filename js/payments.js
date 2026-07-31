@@ -165,8 +165,16 @@
     deleteButtons.forEach((btn) => {
       btn.addEventListener('click', function () {
         const paymentId = this.getAttribute('data-payment-id');
-        if (confirm('Are you sure you want to delete this payment?')) {
-          deletePaymentRecord(paymentId);
+        if (window.ConfirmDialog) {
+          window.ConfirmDialog.show(
+            'Delete Payment',
+            'Are you sure you want to delete this payment?',
+            function () {
+              deletePaymentRecord(paymentId);
+            }
+          );
+        } else {
+          console.error('ConfirmDialog not available');
         }
       });
     });
@@ -186,7 +194,6 @@
       }
 
       await renderPayments();
-      window.alert('Payment deleted successfully.');
     } catch (error) {
       console.error('Delete error:', error);
       window.alert('Unable to delete payment. Please try again.');

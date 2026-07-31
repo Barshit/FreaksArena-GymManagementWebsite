@@ -32,6 +32,42 @@ faders.forEach((section) => {
 });
 
 /* ============================
+   Announcements: fetch and render on home page
+   ============================ */
+async function fetchAndRenderAnnouncements() {
+  const container = document.getElementById('announcements-list');
+  if (!container) return;
+
+  try {
+    const response = await fetch('/api/announcements/active');
+    if (!response.ok) throw new Error('Failed to fetch announcements');
+    const announcements = await response.json();
+
+    if (!announcements.length) {
+      container.innerHTML = '<p>No new announcements at this time.</p>';
+      return;
+    }
+
+    container.innerHTML = announcements
+      .map(
+        (a) => `
+        <div class="announcement-item">
+          <h3>${a.title}</h3>
+          <p>${a.message}</p>
+          <small>${new Date(a.publishedAt).toLocaleDateString()}</small>
+        </div>
+      `
+      )
+      .join('');
+  } catch (error) {
+    console.error('Error loading announcements:', error);
+    container.innerHTML = '<p>Unable to load announcements.</p>';
+  }
+}
+
+fetchAndRenderAnnouncements();
+
+/* ============================
    Membership inquiry form: validation + toast feedback
    ============================ */
 const form = document.getElementById("membershipForm");

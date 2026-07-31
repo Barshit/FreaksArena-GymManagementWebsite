@@ -1,6 +1,7 @@
 const Settings = require('../models/Settings');
 const Admin = require('../models/Admin');
 const bcrypt = require('bcrypt');
+const { validatePassword } = require('../utils/passwordValidator');
 
 // Get all settings
 async function getSettings(req, res) {
@@ -293,12 +294,10 @@ async function changeAdminPassword(req, res) {
       return res.status(400).json({ error: 'New password and confirm password do not match.' });
     }
 
-    if (newPassword.length < 6) {
-      return res.status(400).json({ error: 'New password must be at least 6 characters long.' });
-    }
-
-    if (newPassword === currentPassword) {
-      return res.status(400).json({ error: 'New password must be different from current password.' });
+    // Validate new password against policy
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+      return res.status(400).json({ error: passwordValidation.message });
     }
 
     const admin = await Admin.findById(adminId).select('+password');
@@ -307,13 +306,20 @@ async function changeAdminPassword(req, res) {
       return res.status(404).json({ error: 'Admin not found.' });
     }
 
+    // Verify current password
     const isPasswordValid = await bcrypt.compare(currentPassword, admin.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Current password is incorrect.' });
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // Check if new password is the same as current password
+    const newPasswordMatches = await bcrypt.compare(newPassword, admin.password);
+    if (newPasswordMatches) {
+      return res.status(400).json({ error: 'New password must be different from your current password.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
     admin.password = hashedPassword;
     await admin.save();
 

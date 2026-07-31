@@ -440,6 +440,10 @@ button {
   margin-bottom: 1.5rem;
 }
 
+.modal-body {
+  margin-bottom: 1.5rem;
+}
+
 .member-form {
   display: grid;
   gap: 1rem;
@@ -767,6 +771,11 @@ button {
   appearance: none;
 }
 
+.admin-layout select option {
+  color: #0f172a;
+  background: #ffffff;
+}
+
 .empty-row {
   padding: 2rem;
   text-align: center;
@@ -984,4 +993,111 @@ button {
   .login-panel {
     padding: 1.5rem;
   }
+}
+
+.announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.announcement-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.announcement-info {
+  flex: 1;
+}
+
+.announcement-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.announcement-meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.priority-badge {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.priority-badge.urgent {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.priority-badge.important {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--gold-300);
+}
+
+.placeholder-text {
+  color: var(--muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+.expiring-member-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  transition: background 0.2s ease;
+}
+
+.expiring-member-item:hover {
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.expiring-member-info {
+  flex: 1;
+}
+
+.expiring-member-name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.expiring-member-details {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.expiring-member-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.days-remaining {
+  font-weight: 600;
+  color: var(--gold-300);
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold-300);
 }

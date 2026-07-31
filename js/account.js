@@ -79,8 +79,16 @@
         showError('New passwords do not match.');
         return;
       }
-      if (password.length < 6) {
-        showError('New password must be at least 6 characters long.');
+      if (password.length < 8) {
+        showError('New password must be at least 8 characters long.');
+        return;
+      }
+      if (password.length > 128) {
+        showError('New password must not exceed 128 characters.');
+        return;
+      }
+      if (!password.trim()) {
+        showError('Password cannot be empty or contain only whitespace.');
         return;
       }
     }

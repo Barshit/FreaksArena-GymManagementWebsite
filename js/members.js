@@ -61,9 +61,13 @@
     });
   }
 
-  async function renewMember(memberId) {
+  async function renewMember(memberId, paymentData) {
     return fetchJson(`${API_BASE}/${encodeURIComponent(memberId)}/renew`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(paymentData),
     });
   }
 
@@ -452,13 +456,11 @@ If you have any questions about your membership, we are here to help.
     try {
       if (mode === 'edit' && memberId) {
         await updateMember(memberId, payload);
-        window.alert('Member updated successfully.');
       } else {
         const createdMember = await createMember(payload);
         if (values.sendWhatsapp) {
           openWhatsApp(createdMember);
         }
-        window.alert('Member created successfully.');
       }
       closeMemberModal();
       await renderMembersTable();
@@ -487,11 +489,17 @@ If you have any questions about your membership, we are here to help.
       return;
     }
 
+    const formData = new FormData(form);
+    const paymentData = {
+      amountPaid: parseFloat(formData.get('amountPaid')) || 0,
+      paymentMethod: formData.get('paymentMethod') || 'Cash',
+      paymentStatus: formData.get('paymentStatus') || 'Paid',
+    };
+
     try {
-      await renewMember(memberId);
+      await renewMember(memberId, paymentData);
       closeRenewModal();
       await renderMembersTable();
-      window.alert('Member renewed successfully.');
     } catch (error) {
       if (errorEl) {
         errorEl.textContent = error.message;
@@ -551,7 +559,6 @@ If you have any questions about your membership, we are here to help.
       });
       closePauseModal();
       await renderMembersTable();
-      window.alert('Member paused successfully.');
     } catch (error) {
       if (errorEl) {
         errorEl.textContent = error.message;
@@ -590,14 +597,21 @@ If you have any questions about your membership, we are here to help.
     }
 
     if (action === 'delete') {
-      if (window.confirm('Are you sure you want to delete this member?')) {
-        try {
-          await deleteMember(memberId);
-          await renderMembersTable();
-          window.alert('Member deleted successfully.');
-        } catch (error) {
-          window.alert(`Unable to delete member: ${error.message}`);
-        }
+      if (window.ConfirmDialog) {
+        window.ConfirmDialog.show(
+          'Delete Member',
+          'Are you sure you want to delete this member?',
+          async function () {
+            try {
+              await deleteMember(memberId);
+              await renderMembersTable();
+            } catch (error) {
+              window.alert(`Unable to delete member: ${error.message}`);
+            }
+          }
+        );
+      } else {
+        console.error('ConfirmDialog not available');
       }
     }
   }
@@ -849,14 +863,21 @@ If you have any questions about your membership, we are here to help.
         pauseStatusEl.style.color = 'var(--warning)';
 
         pauseUnpauseBtn.addEventListener('click', async function () {
-          if (window.confirm('Are you sure you want to unpause this membership? The expiry date will be extended by the pause duration.')) {
-            try {
-              await unpauseMembership(memberId);
-              window.alert('Membership unpaused successfully.');
-              location.reload();
-            } catch (error) {
-              window.alert(`Unable to unpause membership: ${error.message}`);
-            }
+          if (window.ConfirmDialog) {
+            window.ConfirmDialog.show(
+              'Unpause Membership',
+              'Are you sure you want to unpause this membership? The expiry date will be extended by the pause duration.',
+              async function () {
+                try {
+                  await unpauseMembership(memberId);
+                  location.reload();
+                } catch (error) {
+                  window.alert(`Unable to unpause membership: ${error.message}`);
+                }
+              }
+            );
+          } else {
+            console.error('ConfirmDialog not available');
           }
         });
       } else {
@@ -967,7 +988,6 @@ If you have any questions about your membership, we are here to help.
             pauseModal.classList.add('hidden');
             document.body.style.overflow = '';
           }
-          window.alert('Member paused successfully.');
           location.reload();
         } catch (error) {
           if (errorEl) {
