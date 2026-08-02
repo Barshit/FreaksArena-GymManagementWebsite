@@ -22,6 +22,7 @@ const validateEnv = require('./config/validateEnv');
 const notFoundHandler = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const { logActivity } = require('./utils/activityLogger');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -33,6 +34,21 @@ app.set('views', appConfig.viewsPath);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+app.get('/health', (req, res) => {
+  const dbConnected = mongoose.connection && mongoose.connection.readyState === 1;
+  const healthStatus = dbConnected ? 'healthy' : 'unhealthy';
+
+  const payload = {
+    status: healthStatus,
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: dbConnected ? 'connected' : 'unavailable',
+  };
+
+  res.status(dbConnected ? 200 : 503).json(payload);
+});
 
 // Debug middleware to trace all requests
 app.use((req, res, next) => {
