@@ -18,6 +18,7 @@ const activityLogsRouter = require('./routes/activityLogs');
 const appConfig = require('./config/appConfig');
 const connectDB = require('./config/db');
 const ensureAdminAccount = require('./config/seedAdmin');
+const validateEnv = require('./config/validateEnv');
 const notFoundHandler = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const { logActivity } = require('./utils/activityLogger');
@@ -48,12 +49,10 @@ const PORT = appConfig.port;
 
 const startServer = async () => {
   try {
+    validateEnv();
     await connectDB();
 
     const sessionSecret = process.env.SESSION_SECRET;
-    if (!sessionSecret) {
-      throw new Error('SESSION_SECRET environment variable is not set.');
-    }
 
     app.use(
       session({

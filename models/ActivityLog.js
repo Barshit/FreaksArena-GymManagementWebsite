@@ -84,5 +84,6 @@ activityLogSchema.index({ module: 1 });
 activityLogSchema.index({ recordId: 1 });
 activityLogSchema.index({ createdAt: -1 });
 activityLogSchema.index({ admin: 1, action: 1, createdAt: -1 });
+activityLogSchema.index({ module: 1, createdAt: -1 });
 
 module.exports = mongoose.model('ActivityLog', activityLogSchema);

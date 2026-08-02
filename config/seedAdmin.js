@@ -7,11 +7,6 @@ const ensureAdminAccount = async () => {
   const adminPassword = process.env.ADMIN_PASSWORD;
   const adminName = process.env.ADMIN_NAME || 'Gym Owner';
 
-  if (!adminEmail || !adminPassword) {
-    console.warn('ADMIN_EMAIL and ADMIN_PASSWORD are required to seed the admin account. Skipping admin seed.');
-    return;
-  }
-
   // Validate password against policy
   const passwordValidation = validatePassword(adminPassword);
   if (!passwordValidation.isValid) {

@@ -87,4 +87,11 @@ const memberSchema = new mongoose.Schema(
   }
 );
 
+memberSchema.index({ memberId: 1 });
+memberSchema.index({ phone: 1 });
+memberSchema.index({ expiryDate: 1 });
+memberSchema.index({ joiningDate: 1 });
+memberSchema.index({ birthday: 1 });
+memberSchema.index({ updatedAt: -1, createdAt: -1 });
+
 module.exports = mongoose.model('Member', memberSchema);

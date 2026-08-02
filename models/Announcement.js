@@ -53,5 +53,8 @@ const announcementSchema = new mongoose.Schema(
 
 announcementSchema.index({ status: 1, publishedAt: -1 });
 announcementSchema.index({ expiresAt: 1 });
+announcementSchema.index({ targetAudience: 1 });
+announcementSchema.index({ category: 1 });
+announcementSchema.index({ priority: 1 });
 
 module.exports = mongoose.model('Announcement', announcementSchema);
