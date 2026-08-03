@@ -43,6 +43,14 @@ const adminSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+    lockUntil: {
+      type: Date,
+      default: null,
+    },
     profilePictureUrl: {
       type: String,
       trim: true,

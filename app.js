@@ -27,8 +27,19 @@ const mongoose = require('mongoose');
 const app = express();
 
 // Security headers with production-safe defaults
-app.use(helmet());
-
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        frameSrc: [
+          "'self'",
+          "https://www.google.com"
+        ]
+      }
+    }
+  })
+);
 app.set('view engine', 'ejs');
 app.set('views', appConfig.viewsPath);
 

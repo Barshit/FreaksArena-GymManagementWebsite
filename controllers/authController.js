@@ -17,6 +17,9 @@ const renderLogin = (req, res) => {
   });
 };
 
+const MAX_FAILED_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
 const login = async (req, res) => {
   const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
   const password = req.body.password ? req.body.password : '';
@@ -47,25 +50,58 @@ const login = async (req, res) => {
       });
     }
 
-    const passwordMatches = await bcrypt.compare(password, admin.password);
-    if (!passwordMatches) {
+    const now = Date.now();
+    if (admin.lockUntil && admin.lockUntil.getTime() > now) {
       return res.status(401).render('admin-login', {
         extraHead: '',
         title: 'Admin Login | Freaks Arena Gym',
         styles: ['/css/dashboard.css'],
         scripts: [],
         bodyClass: 'admin-login-page',
-        message: 'Invalid email or password.',
+        message: 'Account locked due to multiple failed login attempts. Please try again after 15 minutes.',
         email,
       });
     }
 
+    if (admin.lockUntil && admin.lockUntil.getTime() <= now) {
+      admin.lockUntil = null;
+      admin.failedLoginAttempts = 0;
+      await admin.save();
+    }
+
+    const passwordMatches = await bcrypt.compare(password, admin.password);
+    if (!passwordMatches) {
+      admin.failedLoginAttempts = (admin.failedLoginAttempts || 0) + 1;
+      let message = 'Invalid email or password.';
+
+      if (admin.failedLoginAttempts >= MAX_FAILED_LOGIN_ATTEMPTS) {
+        admin.lockUntil = new Date(now + LOCKOUT_DURATION_MS);
+        admin.failedLoginAttempts = 0;
+        message = 'Account locked due to multiple failed login attempts. Please try again after 15 minutes.';
+      }
+
+      await admin.save();
+
+      return res.status(401).render('admin-login', {
+        extraHead: '',
+        title: 'Admin Login | Freaks Arena Gym',
+        styles: ['/css/dashboard.css'],
+        scripts: [],
+        bodyClass: 'admin-login-page',
+        message,
+        email,
+      });
+    }
+
+    await Admin.findByIdAndUpdate(admin._id, {
+      failedLoginAttempts: 0,
+      lockUntil: null,
+      lastLogin: new Date(),
+    });
+
     req.session.adminId = admin._id.toString();
     req.session.adminEmail = admin.email;
     req.session.adminName = admin.name;
-
-    // Update last login time
-    await Admin.findByIdAndUpdate(admin._id, { lastLogin: new Date() });
 
     req.session.save(async (err) => {
       if (err) {

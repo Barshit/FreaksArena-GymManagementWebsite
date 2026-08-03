@@ -70,64 +70,107 @@ async function getDashboardStats(req, res) {
     const monthlyRevenue = revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0;
 
     // Memberships Expiring Within 7 Days (excluding paused members)
-    const allMembers = await Member.find().lean();
-
-    let expiringCount = 0;
-    let expiredCount = 0;
-    const expiringMembers = [];
-
-    for (const member of allMembers) {
-      const status = getMemberStatus(member);
-
-      // Only count active members for expiring/expired status
-      if (status === 'paused') {
-        continue;
-      }
-
-      const expiryDate = new Date(member.expiryDate);
-      expiryDate.setUTCHours(0, 0, 0, 0);
-
-      if (status === 'expired') {
-        expiredCount += 1;
-      } else if (expiryDate >= today && expiryDate < sevenDaysFromNow) {
-        expiringCount += 1;
-        const daysRemaining = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-        expiringMembers.push({
-          _id: member._id,
-          fullName: member.fullName,
-          plan: member.plan,
-          expiryDate: member.expiryDate,
-          daysRemaining: daysRemaining,
-        });
-      }
-    }
-
-    // Sort expiring members by nearest expiry date first
-    expiringMembers.sort((a, b) => a.daysRemaining - b.daysRemaining);
-
-    // Limit to 5 members for display
-    const expiringMembersList = expiringMembers.slice(0, 5);
-
-    // Pending Payments - Assume "pending" status payments
-    const pendingPaymentsResult = await Payment.countDocuments({
-      status: 'pending',
-    });
-
-    // Today's Birthdays
-    const birthdaysResult = await Member.find({
-      birthday: {
-        $exists: true,
-        $ne: null,
+    // Use aggregation to avoid fetching all members into application memory.
+    // Compute today's start and 7-days boundary as Date objects (UTC midnight) and pass to aggregation.
+    const memberExpiryPipeline = [
+      {
+        $addFields: {
+          isPaused: {
+            $gt: [
+              {
+                $size: {
+                  $filter: {
+                    input: { $ifNull: ['$pauseHistory', []] },
+                    as: 'pause',
+                    cond: {
+                      $and: [
+                        { $lte: ['$$pause.startDate', today] },
+                        { $gte: ['$$pause.endDate', today] },
+                      ],
+                    },
+                  },
+                },
+              },
+              0,
+            ],
+          },
+        },
       },
-    })
-      .select('_id birthday fullName')
-      .lean();
+      {
+        $facet: {
+          expiredCount: [
+            { $match: { isPaused: false, expiryDate: { $lt: today } } },
+            { $count: 'count' },
+          ],
+          expiringCount: [
+            { $match: { isPaused: false, expiryDate: { $gte: today, $lt: sevenDaysFromNow } } },
+            { $count: 'count' },
+          ],
+          expiringMembersList: [
+            { $match: { isPaused: false, expiryDate: { $gte: today, $lt: sevenDaysFromNow } } },
+            {
+              $addFields: {
+                daysRemaining: {
+                  $ceil: {
+                    $divide: [
+                      { $subtract: ['$expiryDate', today] },
+                      1000 * 60 * 60 * 24,
+                    ],
+                  },
+                },
+              },
+            },
+            { $sort: { daysRemaining: 1 } },
+            { $limit: 5 },
+            {
+              $project: {
+                _id: 1,
+                fullName: 1,
+                plan: 1,
+                expiryDate: 1,
+                daysRemaining: 1,
+              },
+            },
+          ],
+        },
+      },
+    ];
 
-    const birthdayCount = birthdaysResult.filter((member) => {
-      if (!member.birthday) return false;
-      const bday = new Date(member.birthday);
-      return bday.getUTCDate() === today.getUTCDate() && bday.getUTCMonth() === today.getUTCMonth();
-    }).length;
+    const memberExpiryResult = await Member.aggregate(memberExpiryPipeline);
+
+    const expiredCount = (memberExpiryResult[0].expiredCount[0] && memberExpiryResult[0].expiredCount[0].count) || 0;
+    const expiringCount = (memberExpiryResult[0].expiringCount[0] && memberExpiryResult[0].expiringCount[0].count) || 0;
+    const expiringMembersList = memberExpiryResult[0].expiringMembersList || [];
+
+    // Pending Payments - unchanged
+    const pendingPaymentsResult = await Payment.countDocuments({ status: 'pending' });
+
+    // Today's Birthdays - use aggregation to count day/month equality in DB
+    const birthDay = today.getUTCDate();
+    const birthMonth = today.getUTCMonth() + 1; // Mongo $month is 1-12
+
+    const birthdayPipeline = [
+      {
+        $match: {
+          birthday: { $exists: true, $ne: null },
+        },
+      },
+      {
+        $addFields: {
+          bDay: { $dayOfMonth: '$birthday' },
+          bMonth: { $month: '$birthday' },
+        },
+      },
+      {
+        $match: {
+          $expr: { $and: [{ $eq: ['$bDay', birthDay] }, { $eq: ['$bMonth', birthMonth] }] },
+        },
+      },
+      { $count: 'count' },
+    ];
+
+    const birthdaysAgg = await Member.aggregate(birthdayPipeline);
+    const birthdayCount = (birthdaysAgg[0] && birthdaysAgg[0].count) || 0;
 
     // Active Announcements
     const activeAnnouncements = await Announcement.find({
