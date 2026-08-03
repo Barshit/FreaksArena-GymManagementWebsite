@@ -99,27 +99,45 @@ const login = async (req, res) => {
       lastLogin: new Date(),
     });
 
-    req.session.adminId = admin._id.toString();
-    req.session.adminEmail = admin.email;
-    req.session.adminName = admin.name;
+    // Preserve required session data before regenerating the session ID
+    const preservedSession = {
+      adminId: admin._id.toString(),
+      adminEmail: admin.email,
+      adminName: admin.name,
+    };
 
-    req.session.save(async (err) => {
-      if (err) {
-        console.error('Session save error:', err);
+    // Regenerate the session to mitigate session fixation attacks
+    // Do NOT regenerate on failed login; only performed here after successful auth
+    req.session.regenerate(async (regErr) => {
+      if (regErr) {
+        console.error('Session regeneration error:', regErr);
         return res.status(500).send('Unable to establish a secure session. Please try again.');
       }
 
-      // Log login activity
-      if (req.logActivity) {
-        await req.logActivity({
-          action: 'login',
-          module: 'auth',
-          description: `Admin logged in`,
-          status: 'success',
-        });
-      }
+      // Restore required session values onto the newly-generated session
+      req.session.adminId = preservedSession.adminId;
+      req.session.adminEmail = preservedSession.adminEmail;
+      req.session.adminName = preservedSession.adminName;
 
-      return res.redirect('/dashboard');
+      // Persist the new session and then proceed with login actions
+      req.session.save(async (saveErr) => {
+        if (saveErr) {
+          console.error('Session save error:', saveErr);
+          return res.status(500).send('Unable to establish a secure session. Please try again.');
+        }
+
+        // Log login activity
+        if (req.logActivity) {
+          await req.logActivity({
+            action: 'login',
+            module: 'auth',
+            description: `Admin logged in`,
+            status: 'success',
+          });
+        }
+
+        return res.redirect('/dashboard');
+      });
     });
   } catch (error) {
     console.error('Authentication error:', error);
