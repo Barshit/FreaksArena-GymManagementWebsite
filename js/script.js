@@ -193,7 +193,7 @@ function showToast(message, type = "success") {
 }
 
 if (form) {
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit",async function (e) {
     e.preventDefault();
 
     const fieldsToValidate = [nameField, emailField, phoneField, goalField, planField].filter(Boolean);
@@ -225,20 +225,50 @@ if (form) {
       if (btnLabel) btnLabel.textContent = "Submitting…";
     }
 
-    setTimeout(() => {
-      showToast("Thanks! Your inquiry has been received — we'll be in touch soon.", "success");
+    try {
+  const response = await fetch('/api/enquiries', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('input[name="_csrf"]').value,
+    },
+    body: JSON.stringify(member),
+  });
 
-      form.reset();
-      fieldsToValidate.forEach((field) =>
-        field.classList.remove("valid", "invalid")
-      );
+  const result = await response.json();
 
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        const btnLabel = submitBtn.querySelector(".btn-label");
-        if (btnLabel) btnLabel.textContent = "Submit Inquiry";
-      }
-    }, 700);
+  if (!response.ok) {
+    throw new Error(result.message || 'Failed to submit enquiry.');
+  }
+
+  showToast(
+    "Thanks! Your inquiry has been received — we'll be in touch soon.",
+    "success"
+  );
+
+  form.reset();
+
+  fieldsToValidate.forEach((field) =>
+    field.classList.remove("valid", "invalid")
+  );
+} catch (error) {
+  console.error(error);
+
+  showToast(
+    "Unable to submit your enquiry. Please try again.",
+    "error"
+  );
+} finally {
+  if (submitBtn) {
+    submitBtn.disabled = false;
+
+    const btnLabel = submitBtn.querySelector(".btn-label");
+
+    if (btnLabel) {
+      btnLabel.textContent = "Submit Inquiry";
+    }
+  }
+}
   });
 }
 

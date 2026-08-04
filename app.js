@@ -25,6 +25,7 @@ const notFoundHandler = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const { logActivity } = require('./utils/activityLogger');
 const mongoose = require('mongoose');
+const enquiriesRouter = require('./routes/enquiries');
 
 const app = express();
 const {
@@ -134,6 +135,7 @@ const startServer = async () => {
     app.use('/api/settings', settingsApiRouter);
     app.use('/api/activity-logs', activityLogsRouter);
     app.use('/', pagesRouter);
+    app.use('/api/enquiries', enquiriesRouter);
     app.use(notFoundHandler);
     app.use(errorHandler);
 
