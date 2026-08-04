@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const noCache = require('./middleware/noCache');
 const { csrfSync } = require('csrf-sync');
 const express = require('express');
 const path = require('path');
@@ -110,6 +111,7 @@ const startServer = async () => {
         },
       })
     );
+    app.use(noCache);
     app.use(express.urlencoded({ extended: false }));
     app.use(express.json());
     app.use((req, res, next) => {
