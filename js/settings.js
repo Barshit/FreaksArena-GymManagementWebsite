@@ -104,7 +104,7 @@
     }
 
     try {
-      const response = await fetch('/api/settings/gym-info', {
+      const response = await csrfFetch('/api/settings/gym-info', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -145,7 +145,7 @@
     }
 
     try {
-      const response = await fetch('/api/settings/membership', {
+      const response = await csrfFetch('/api/settings/membership', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -183,7 +183,7 @@
     }
 
     try {
-      const response = await fetch('/api/settings/payment', {
+      const response = await csrfFetch('/api/settings/payment', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -218,7 +218,7 @@
     }
 
     try {
-      const response = await fetch('/api/settings/system', {
+      const response = await csrfFetch('/api/settings/system', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -274,7 +274,7 @@
     }
 
     try {
-      const response = await fetch('/api/settings/change-password', {
+      const response = await csrfFetch('/api/settings/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

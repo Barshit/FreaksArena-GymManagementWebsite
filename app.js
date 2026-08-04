@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const { csrfSync } = require('csrf-sync');
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -25,7 +26,18 @@ const { logActivity } = require('./utils/activityLogger');
 const mongoose = require('mongoose');
 
 const app = express();
+const {
+  csrfSynchronisedProtection,
+  generateToken,
+} = csrfSync({
+  getTokenFromRequest: (req) => {
+    if (req.is("application/x-www-form-urlencoded")) {
+      return req.body._csrf;
+    }
 
+    return req.headers["x-csrf-token"];
+  },
+});
 // Security headers with production-safe defaults
 app.use(
   helmet({
@@ -43,8 +55,7 @@ app.use(
 app.set('view engine', 'ejs');
 app.set('views', appConfig.viewsPath);
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+
 
 app.get('/health', (req, res) => {
   const dbConnected = mongoose.connection && mongoose.connection.readyState === 1;
@@ -99,7 +110,14 @@ const startServer = async () => {
         },
       })
     );
-
+    app.use(express.urlencoded({ extended: false }));
+    app.use(express.json());
+    app.use((req, res, next) => {
+  res.locals.csrfToken = generateToken(req);
+  next();
+});
+    app.use(csrfSynchronisedProtection);
+    
     await ensureAdminAccount();
 
     app.use(logActivity);

@@ -131,6 +131,7 @@
           <p class="body-text">Update your gym information, membership settings, payment preferences, and system configuration.</p>
 
           <form id="settings-form" class="settings-form" novalidate>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div id="settings-message" class="success-message" aria-live="polite"></div>
             <div id="settings-error" class="form-error" aria-live="assertive"></div>
 

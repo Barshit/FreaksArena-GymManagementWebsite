@@ -92,6 +92,7 @@
         <button type="button" id="close-pause-modal" class="icon-button" aria-label="Close dialog">✕</button>
       </div>
       <form id="pause-form-details" class="member-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div id="pause-form-error" class="form-error" aria-live="polite"></div>
         <div class="form-grid">
           <label>

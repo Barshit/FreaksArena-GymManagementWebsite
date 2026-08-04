@@ -240,7 +240,7 @@
       const method = mode === 'edit' ? 'PUT' : 'POST';
       const url = mode === 'edit' ? `/api/announcements/${currentId}` : '/api/announcements';
 
-      const response = await fetch(url, {
+      const response = await csrfFetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
@@ -291,7 +291,7 @@
           'Are you sure you want to delete this announcement?',
           async function () {
             try {
-              const response = await fetch(`/api/announcements/${id}`, { method: 'DELETE' });
+              const response = await csrfFetch(`/api/announcements/${id}`, { method: 'DELETE' });
               if (!response.ok) {
                 throw new Error('Failed to delete announcement');
               }

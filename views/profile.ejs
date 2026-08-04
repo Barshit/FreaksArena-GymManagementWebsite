@@ -216,6 +216,7 @@
         <button type="button" id="close-profile-modal" class="icon-button" aria-label="Close dialog">✕</button>
       </div>
       <form id="profile-form" class="profile-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div id="profile-form-error" class="form-error" aria-live="polite"></div>
         <div class="form-grid">
           <label>

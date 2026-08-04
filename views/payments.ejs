@@ -58,6 +58,7 @@
         <button type="button" id="close-payment-modal" class="icon-button" aria-label="Close dialog">✕</button>
       </div>
       <form id="payment-form" class="payment-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div id="payment-form-error" class="form-error" aria-live="polite"></div>
         <div class="form-grid">
           <label>

@@ -95,7 +95,7 @@
 
     try {
       // First, update profile (username and email)
-      const profileUpdateResponse = await fetch('/api/admin/profile', {
+      const profileUpdateResponse = await csrfFetch('/api/admin/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +114,7 @@
 
       // If password change is requested
       if (password && confirmPassword) {
-        const passwordChangeResponse = await fetch('/api/settings/change-password', {
+        const passwordChangeResponse = await csrfFetch('/api/settings/change-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

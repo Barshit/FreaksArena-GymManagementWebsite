@@ -162,7 +162,7 @@
       }
 
       try {
-        const response = await fetch('/api/admin/profile', {
+        const response = await csrfFetch('/api/admin/profile', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -180,7 +180,7 @@
 
         // Update profile picture if provided
         if (profileForm.elements.photoUrl.value.trim()) {
-          const pictureResponse = await fetch('/api/admin/profile/picture', {
+          const pictureResponse = await csrfFetch('/api/admin/profile/picture', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

@@ -16,11 +16,13 @@ const ensureAdminAccount = async () => {
   }
 
   const normalizedEmail = adminEmail.trim().toLowerCase();
-  const existingAdmin = await Admin.findOne({ email: normalizedEmail });
 
-  if (existingAdmin) {
-    return;
-  }
+// Check if ANY admin already exists
+const existingAdmin = await Admin.findOne();
+
+if (existingAdmin) {
+  return;
+}
 
   const hashedPassword = await bcrypt.hash(adminPassword, 12);
 

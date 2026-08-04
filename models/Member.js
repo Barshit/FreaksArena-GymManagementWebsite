@@ -18,7 +18,6 @@ const memberSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
     },
     gender: {
       type: String,

@@ -17,7 +17,7 @@ const parseDateOnly = (value) => {
   return Number.isNaN(d.getTime()) ? null : d;
 };
 
-const parseMemberPayload = (body) => {
+const parseMemberPayload = (body = {}) => {
   const payload = {
     memberId: body.memberId ? String(body.memberId).trim() : '',
     fullName: body.fullName ? String(body.fullName).trim() : '',
@@ -108,17 +108,6 @@ const validateMemberPayload = async (payload, currentMemberId = null) => {
     }
   }
 
-  // Ensure phone is unique
-  if (payload.phone) {
-    const phoneQuery = { phone: payload.phone };
-    if (currentMemberId && mongoose.Types.ObjectId.isValid(currentMemberId)) {
-      phoneQuery._id = { $ne: currentMemberId };
-    }
-    const existingPhone = await Member.findOne(phoneQuery).lean();
-    if (existingPhone) {
-      errors.push('Phone number is already used by another member.');
-    }
-  }
 
   return errors;
 };
@@ -325,19 +314,23 @@ const renewMember = async (req, res) => {
     await member.save();
 
     const payload = parseMemberPayload(req.body);
-    const amountPaid = Number.isNaN(payload.amountPaid) ? 0 : payload.amountPaid;
-    const paymentMethod = payload.paymentMethod || 'Cash';
-    const paymentStatus = payload.paymentStatus || 'Paid';
+    const shouldRecordPayment = req.body && Object.keys(req.body).some((key) => key !== '_csrf');
 
-    await Payment.create({
-      member: member._id,
-      amount: amountPaid,
-      method: paymentMethod.toLowerCase(),
-      status: paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
-      membershipPlan: member.plan,
-      recordedBy: req.session.adminId,
-      notes: 'Membership renewal',
-    });
+    if (shouldRecordPayment) {
+      const amountPaid = Number.isNaN(payload.amountPaid) ? 0 : payload.amountPaid;
+      const paymentMethod = payload.paymentMethod || 'Cash';
+      const paymentStatus = payload.paymentStatus || 'Paid';
+
+      await Payment.create({
+        member: member._id,
+        amount: amountPaid,
+        method: paymentMethod.toLowerCase(),
+        status: paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
+        membershipPlan: member.plan,
+        recordedBy: req.session.adminId,
+        notes: 'Membership renewal',
+      });
+    }
 
     // Log membership renewal activity
     if (req.logActivity) {

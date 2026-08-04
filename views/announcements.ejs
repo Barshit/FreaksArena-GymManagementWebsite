@@ -58,6 +58,7 @@
         <button type="button" id="close-announcement-modal" class="icon-button" aria-label="Close dialog">✕</button>
       </div>
       <form id="announcement-form" class="member-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div id="announcement-form-error" class="form-error" aria-live="polite"></div>
         <div class="form-grid">
           <label>

@@ -182,7 +182,7 @@
 
   async function deletePaymentRecord(paymentId) {
     try {
-      const response = await fetch(`/api/payments/${paymentId}`, {
+      const response = await csrfFetch(`/api/payments/${paymentId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -326,8 +326,10 @@
      memberId: form.elements.memberId.value,
      amount: form.elements.amount.value.trim(),
      paidAt: form.elements.date.value,
+     date: form.elements.date.value,
      method: form.elements.method.value.toLowerCase(),
      membershipPlan: form.elements.type.value,
+     type: form.elements.type.value,
      status: form.elements.status.value,
      notes: form.elements.notes.value.trim(),
     };
@@ -344,13 +346,13 @@
     try {
      let response;
      if (currentEditingPaymentId) {
-       response = await fetch(`/api/payments/${currentEditingPaymentId}`, {
+       response = response = await csrfFetch(`/api/payments/${currentEditingPaymentId}`, {
          method: 'PUT',
          headers: { 'Content-Type': 'application/json' },
          body: JSON.stringify(values),
        });
      } else {
-       response = await fetch('/api/payments', {
+       response = await csrfFetch('/api/payments', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
          body: JSON.stringify(values),
@@ -369,9 +371,13 @@
 
      if (values.membershipPlan === 'Membership Renewal' && values.memberId) {
        try {
-         const renewResponse = await fetch(
+         const renewResponse = await csrfFetch(
            `/api/members/${encodeURIComponent(values.memberId)}/renew`,
-           { method: 'POST' }
+           {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({}),
+           }
          );
          if (!renewResponse.ok) {
            throw new Error(`Unable to renew membership (${renewResponse.status})`);

@@ -371,6 +371,7 @@
             novalidate
             aria-label="Membership inquiry form"
           >
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="form-field">
               <label class="sr-only" for="name">Full Name</label>
               <input

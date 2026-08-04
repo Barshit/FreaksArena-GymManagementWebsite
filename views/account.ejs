@@ -80,6 +80,7 @@
           <p class="body-text">Update your account username, email, and password. Password fields can be left blank if you do not want to change the password.</p>
 
           <form id="account-form" class="account-form" novalidate>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div id="account-message" class="account-message" aria-live="polite"></div>
             <div id="account-form-error" class="form-error" aria-live="assertive"></div>
             <div class="form-grid">

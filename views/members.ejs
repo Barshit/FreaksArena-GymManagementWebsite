@@ -63,6 +63,7 @@
         <button type="button" id="close-member-modal" class="icon-button" aria-label="Close dialog">✕</button>
       </div>
       <form id="member-form" class="member-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div id="member-form-error" class="form-error" aria-live="polite"></div>
         <div class="form-grid">
           <label>
@@ -154,6 +155,7 @@
         <button type="button" id="close-renew-modal" class="icon-button" aria-label="Close dialog">✕</button>
       </div>
       <form id="renew-form" class="member-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <p class="body-text">Renewing this member will extend the expiry date by 30 days from the current expiry.</p>
         <div id="renew-form-error" class="form-error" aria-live="polite"></div>
         <div class="form-grid">
@@ -197,6 +199,7 @@
         <button type="button" id="close-pause-modal" class="icon-button" aria-label="Close dialog">✕</button>
       </div>
       <form id="pause-form" class="member-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div id="pause-form-error" class="form-error" aria-live="polite"></div>
         <div class="form-grid">
           <label>

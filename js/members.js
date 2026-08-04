@@ -11,21 +11,38 @@
 
   let membersCache = [];
 
-  async function fetchJson(url, options) {
-    const response = await fetch(url, options);
-    const contentType = response.headers.get('content-type') || '';
-    let body = null;
-    if (contentType.includes('application/json')) {
-      body = await response.json();
-    } else {
-      body = await response.text();
-    }
-    if (!response.ok) {
-      const errorMessage = body && body.error ? body.error : body.message || body;
-      throw new Error(errorMessage || 'Request failed.');
-    }
-    return body;
+  async function fetchJson(url, options = {}) {
+  const method = (options.method || "GET").toUpperCase();
+
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+    const csrfToken =
+      document.querySelector('input[name="_csrf"]')?.value;
+
+    options.headers = {
+      ...(options.headers || {}),
+      "x-csrf-token": csrfToken,
+    };
   }
+
+  const response = await fetch(url, options);
+
+  const contentType = response.headers.get("content-type") || "";
+  let body = null;
+
+  if (contentType.includes("application/json")) {
+    body = await response.json();
+  } else {
+    body = await response.text();
+  }
+
+  if (!response.ok) {
+    const errorMessage =
+      body && body.error ? body.error : body.message || body;
+    throw new Error(errorMessage || "Request failed.");
+  }
+
+  return body;
+}
 
   async function fetchMembers(searchTerm = '') {
     const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '';
