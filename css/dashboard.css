@@ -330,6 +330,21 @@ button {
   overflow-x: hidden;
 }
 
+.logout-form {
+  margin: 0;
+}
+
+.logout-button {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  padding: 10px 16px;
+}
+
 #notifications-menu {
   min-height: 14rem;
   max-height: calc(80vh);

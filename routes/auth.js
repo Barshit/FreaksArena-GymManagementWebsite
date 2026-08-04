@@ -13,6 +13,6 @@ router.use((req, res, next) => {
 
 router.get(['/admin-login', '/admin-login.html'], redirectIfAuthenticated, authController.renderLogin);
 router.post('/admin-login', redirectIfAuthenticated, loginRateLimiter, authController.login);
-router.get('/logout', authController.logout);
+router.post('/logout', authController.logout);
 
 module.exports = router;
