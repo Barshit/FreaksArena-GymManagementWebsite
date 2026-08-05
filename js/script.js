@@ -13,7 +13,7 @@ const navbar = document.querySelector(".navbar");
   const CLICK_TIMEOUT = 1000; // 1 second window for triple-click
   const REQUIRED_CLICKS = 3;
 
-  unleashText.addEventListener("click", function(e) {
+  unleashText.addEventListener("click", function (e) {
     // Prevent default behavior only on triple-click
     clickCount++;
 
@@ -75,33 +75,59 @@ faders.forEach((section) => {
    Announcements: fetch and render on home page
    ============================ */
 async function fetchAndRenderAnnouncements() {
-  const container = document.getElementById('announcements-list');
+  const container = document.getElementById("announcements-list");
   if (!container) return;
 
   try {
-    const response = await fetch('/api/announcements/active');
-    if (!response.ok) throw new Error('Failed to fetch announcements');
+    const response = await fetch("/api/announcements/active");
+    if (!response.ok) throw new Error("Failed to fetch announcements");
     const announcements = await response.json();
 
     if (!announcements.length) {
-      container.innerHTML = '<p>No new announcements at this time.</p>';
+      container.innerHTML = "<p>No new announcements at this time.</p>";
       return;
     }
 
     container.innerHTML = announcements
       .map(
         (a) => `
-        <div class="announcement-item">
-          <h3>${a.title}</h3>
-          <p>${a.message}</p>
-          <small>${new Date(a.publishedAt).toLocaleDateString()}</small>
-        </div>
-      `
+<div class="announcement-item">
+
+    <div class="announcement-header">
+
+        <span class="announcement-category ${String(a.category || "General").toLowerCase()}">
+            ${a.category || "General"}
+        </span>
+
+        <span class="announcement-date">
+            ${new Date(a.publishedAt).toLocaleDateString()}
+        </span>
+
+    </div>
+
+    <h3 class="announcement-title">
+        ${a.title}
+    </h3>
+
+    <p class="announcement-content">
+        ${a.message}
+    </p>
+
+    <div class="announcement-footer">
+
+        <span class="announcement-priority ${String(a.priority || "Normal").toLowerCase()}">
+            ${a.priority || "Normal"}
+        </span>
+
+    </div>
+
+</div>
+`,
       )
-      .join('');
+      .join("");
   } catch (error) {
-    console.error('Error loading announcements:', error);
-    container.innerHTML = '<p>Unable to load announcements.</p>';
+    console.error("Error loading announcements:", error);
+    container.innerHTML = "<p>Unable to load announcements.</p>";
   }
 }
 
@@ -193,17 +219,26 @@ function showToast(message, type = "success") {
 }
 
 if (form) {
-  form.addEventListener("submit",async function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const fieldsToValidate = [nameField, emailField, phoneField, goalField, planField].filter(Boolean);
+    const fieldsToValidate = [
+      nameField,
+      emailField,
+      phoneField,
+      goalField,
+      planField,
+    ].filter(Boolean);
     const results = fieldsToValidate.map(validateField);
     const isFormValid = results.every(Boolean);
 
     if (!isFormValid) {
-      showToast("Please fix the highlighted fields before submitting.", "error");
+      showToast(
+        "Please fix the highlighted fields before submitting.",
+        "error",
+      );
       const firstInvalid = fieldsToValidate.find((field) =>
-        field.classList.contains("invalid")
+        field.classList.contains("invalid"),
       );
       if (firstInvalid) firstInvalid.focus();
       return;
@@ -226,49 +261,46 @@ if (form) {
     }
 
     try {
-  const response = await fetch('/api/enquiries', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-Token': document.querySelector('input[name="_csrf"]').value,
-    },
-    body: JSON.stringify(member),
-  });
+      const response = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector('input[name="_csrf"]').value,
+        },
+        body: JSON.stringify(member),
+      });
 
-  const result = await response.json();
+      const result = await response.json();
 
-  if (!response.ok) {
-    throw new Error(result.message || 'Failed to submit enquiry.');
-  }
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to submit enquiry.");
+      }
 
-  showToast(
-    "Thanks! Your inquiry has been received — we'll be in touch soon.",
-    "success"
-  );
+      showToast(
+        "Thanks! Your inquiry has been received — we'll be in touch soon.",
+        "success",
+      );
 
-  form.reset();
+      form.reset();
 
-  fieldsToValidate.forEach((field) =>
-    field.classList.remove("valid", "invalid")
-  );
-} catch (error) {
-  console.error(error);
+      fieldsToValidate.forEach((field) =>
+        field.classList.remove("valid", "invalid"),
+      );
+    } catch (error) {
+      console.error(error);
 
-  showToast(
-    "Unable to submit your enquiry. Please try again.",
-    "error"
-  );
-} finally {
-  if (submitBtn) {
-    submitBtn.disabled = false;
+      showToast("Unable to submit your enquiry. Please try again.", "error");
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
 
-    const btnLabel = submitBtn.querySelector(".btn-label");
+        const btnLabel = submitBtn.querySelector(".btn-label");
 
-    if (btnLabel) {
-      btnLabel.textContent = "Submit Inquiry";
+        if (btnLabel) {
+          btnLabel.textContent = "Submit Inquiry";
+        }
+      }
     }
-  }
-}
   });
 }
 
@@ -308,7 +340,7 @@ const spyObserver = new IntersectionObserver(
       }
     });
   },
-  { rootMargin: "-45% 0px -50% 0px" }
+  { rootMargin: "-45% 0px -50% 0px" },
 );
 
 spySections.forEach((section) => spyObserver.observe(section));
@@ -348,7 +380,8 @@ if (navLinks) {
 document.addEventListener("click", (e) => {
   if (!navLinks || !menuBtn) return;
   const isMenuOpen = navLinks.classList.contains("active");
-  const clickedInsideNav = navLinks.contains(e.target) || menuBtn.contains(e.target);
+  const clickedInsideNav =
+    navLinks.contains(e.target) || menuBtn.contains(e.target);
 
   if (isMenuOpen && !clickedInsideNav) {
     closeMobileMenu();
@@ -394,19 +427,23 @@ function calculateBmi() {
   const weightKg = parseFloat(bmiWeight.value);
 
   if (!heightCm || !weightKg || heightCm <= 0 || weightKg <= 0) {
-    if (bmiError) bmiError.textContent = "Please enter a valid height and weight to calculate your BMI.";
+    if (bmiError)
+      bmiError.textContent =
+        "Please enter a valid height and weight to calculate your BMI.";
     resetBmiResult("Enter your height and weight");
     return;
   }
 
   if (heightCm < 100 || heightCm > 250) {
-    if (bmiError) bmiError.textContent = "Height should be between 100cm and 250cm.";
+    if (bmiError)
+      bmiError.textContent = "Height should be between 100cm and 250cm.";
     resetBmiResult("Enter a valid height");
     return;
   }
 
   if (weightKg < 20 || weightKg > 300) {
-    if (bmiError) bmiError.textContent = "Weight should be between 20kg and 300kg.";
+    if (bmiError)
+      bmiError.textContent = "Weight should be between 20kg and 300kg.";
     resetBmiResult("Enter a valid weight");
     return;
   }
@@ -455,12 +492,42 @@ if (bmiCalcBtn) {
 // Split business hours based on image: Monday(1) to Saturday(6). Sunday(0) is null (Off).
 const BUSINESS_HOURS = {
   0: null, // Sunday off
-  1: { morningOpen: "05:00", morningClose: "08:00", eveningOpen: "16:30", eveningClose: "21:00" }, // Monday
-  2: { morningOpen: "05:00", morningClose: "08:00", eveningOpen: "16:30", eveningClose: "21:00" }, // Tuesday
-  3: { morningOpen: "05:00", morningClose: "08:00", eveningOpen: "16:30", eveningClose: "21:00" }, // Wednesday
-  4: { morningOpen: "05:00", morningClose: "08:00", eveningOpen: "16:30", eveningClose: "21:00" }, // Thursday
-  5: { morningOpen: "05:00", morningClose: "08:00", eveningOpen: "16:30", eveningClose: "21:00" }, // Friday
-  6: { morningOpen: "05:00", morningClose: "08:00", eveningOpen: "16:30", eveningClose: "21:00" }, // Saturday
+  1: {
+    morningOpen: "05:00",
+    morningClose: "08:00",
+    eveningOpen: "16:30",
+    eveningClose: "21:00",
+  }, // Monday
+  2: {
+    morningOpen: "05:00",
+    morningClose: "08:00",
+    eveningOpen: "16:30",
+    eveningClose: "21:00",
+  }, // Tuesday
+  3: {
+    morningOpen: "05:00",
+    morningClose: "08:00",
+    eveningOpen: "16:30",
+    eveningClose: "21:00",
+  }, // Wednesday
+  4: {
+    morningOpen: "05:00",
+    morningClose: "08:00",
+    eveningOpen: "16:30",
+    eveningClose: "21:00",
+  }, // Thursday
+  5: {
+    morningOpen: "05:00",
+    morningClose: "08:00",
+    eveningOpen: "16:30",
+    eveningClose: "21:00",
+  }, // Friday
+  6: {
+    morningOpen: "05:00",
+    morningClose: "08:00",
+    eveningOpen: "16:30",
+    eveningClose: "21:00",
+  }, // Saturday
 };
 
 function timeToMinutes(hhmm) {
@@ -519,13 +586,13 @@ function updateOpenStatus() {
     badge.classList.remove("closed");
     badge.classList.add("open");
     text.textContent = `Open Now · Closes ${formatTime(today.morningClose)} (IST)`;
-  } 
+  }
   // Check if currently inside evening session
   else if (nowMinutes >= eOpen && nowMinutes < eClose) {
     badge.classList.remove("closed");
     badge.classList.add("open");
     text.textContent = `Open Now · Closes ${formatTime(today.eveningClose)} (IST)`;
-  } 
+  }
   // Otherwise, it is closed
   else {
     badge.classList.remove("open");
@@ -559,7 +626,9 @@ setInterval(updateOpenStatus, 60 * 1000);
 /* ============================
    Gallery lightbox
    ============================ */
-const galleryImages = Array.from(document.querySelectorAll(".gallery-grid img"));
+const galleryImages = Array.from(
+  document.querySelectorAll(".gallery-grid img"),
+);
 galleryImages.forEach((img) => {
   const markImageLoaded = () => img.classList.add("loaded");
 
@@ -666,8 +735,8 @@ document.addEventListener("keydown", (e) => {
         ? focusable.length - 1
         : currentIdx - 1
       : currentIdx === -1 || currentIdx === focusable.length - 1
-      ? 0
-      : currentIdx + 1;
+        ? 0
+        : currentIdx + 1;
     focusable[nextIdx].focus();
   }
 });

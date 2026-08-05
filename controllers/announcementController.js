@@ -208,7 +208,7 @@ async function getActiveAnnouncements(req, res) {
     })
       .populate('publishedBy', 'email')
       .sort({ publishedAt: -1 })
-      .limit(5)
+      .limit(50)
       .lean();
 
     return res.json(announcements);
