@@ -180,13 +180,15 @@ const createMember = async (req, res) => {
     });
 
     await Payment.create({
-      member: member._id,
-      amount: payload.amountPaid,
-      method: payload.paymentMethod.toLowerCase(),
-      status: payload.paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
-      membershipPlan: payload.plan,
-      recordedBy: req.session.adminId,
-    });
+  member: member._id,
+  memberName: member.fullName,
+  memberPhone: member.phone,
+  amount: payload.amountPaid,
+  method: payload.paymentMethod.toLowerCase(),
+  status: payload.paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
+  membershipPlan: payload.plan,
+  recordedBy: req.session.adminId,
+});
 
     // Log member creation activity
     if (req.logActivity) {
@@ -322,14 +324,16 @@ const renewMember = async (req, res) => {
       const paymentStatus = payload.paymentStatus || 'Paid';
 
       await Payment.create({
-        member: member._id,
-        amount: amountPaid,
-        method: paymentMethod.toLowerCase(),
-        status: paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
-        membershipPlan: member.plan,
-        recordedBy: req.session.adminId,
-        notes: 'Membership renewal',
-      });
+  member: member._id,
+  memberName: member.fullName,
+  memberPhone: member.phone,
+  amount: amountPaid,
+  method: paymentMethod.toLowerCase(),
+  status: paymentStatus.toLowerCase() === 'paid' ? 'completed' : 'pending',
+  membershipPlan: member.plan,
+  recordedBy: req.session.adminId,
+  notes: 'Membership renewal',
+});
     }
 
     // Log membership renewal activity
