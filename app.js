@@ -28,6 +28,7 @@ const mongoose = require('mongoose');
 const enquiriesRouter = require('./routes/enquiries');
 
 const app = express();
+app.set('trust proxy', 1);
 const {
   csrfSynchronisedProtection,
   generateToken,
