@@ -291,9 +291,26 @@
             window.alert('Cannot open WhatsApp. Member phone number is invalid.');
             return;
           }
-          const message = `🎉 Happy Birthday, ${member.fullName}! 🎂\n\nThe entire Freaks Arena family wishes you a fantastic birthday filled with happiness, health, and success.\n\nMay this year bring you new personal records, stronger workouts, and endless motivation.\n\nStay strong, stay consistent, and keep chasing your fitness goals.\n\nHave an amazing day!\n\n— Team Freaks Arena 🧡`;
-          const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-          window.open(url, '_blank');
+          const message =`🎉 Happy Birthday, ${member.fullName}! 🎂
+
+The entire Freaks Arena family wishes you a very Happy Birthday!
+
+May your special day be filled with happiness, good health, success, and endless energy. We hope this year brings you new personal records, stronger workouts, greater confidence, and countless achievements.
+
+Thank you for being a valued member of the Freaks Arena family. Keep pushing your limits, stay consistent, and continue inspiring everyone around you.
+
+Have a fantastic birthday and an incredible year ahead! 🥳🔥
+
+— Team Freaks Arena 🧡`;
+          const params = new URLSearchParams({
+  text: message,
+});
+
+const url = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+window.open(url, "_blank");
+
+          
+          
         });
       });
 
@@ -307,9 +324,30 @@
             window.alert('Cannot open WhatsApp. Member phone number is invalid.');
             return;
           }
-          const message = `Hello ${member.fullName},\n\nThis is a friendly reminder from Freaks Arena that your membership payment is due.\n\nMembership Plan:\n${member.plan}\n\nExpiry Date:\n${member.expiryDate}\n\nPlease visit the gym or contact us to renew your membership and continue your fitness journey without interruption.\n\nThank you for being a part of Freaks Arena.\n\n— Team Freaks Arena 🧡`;
-          const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-          window.open(url, '_blank');
+          const expiry = new Date(member.expiryDate).toLocaleDateString("en-IN", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+
+const message = `⚡️ Payment Due Reminder ⚡️
+
+Dear ${member.fullName},
+
+This is a gentle reminder from Freaks Arena that your membership fee is pending.
+
+📋 Membership Plan: ${member.plan}
+📅 Expiry Date: ${expiry}
+
+Kindly clear your dues at your earliest convenience to keep your membership active and continue enjoying uninterrupted access to the gym.
+
+If you have already made the payment, please ignore this message or contact us.
+
+Thank you! 💪
+
+— Team Freaks Arena 🧡`;
+          const url = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+window.open(url, '_blank');
         });
       });
 
@@ -340,12 +378,12 @@
     }, 25000);
   }
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', function (event) {
-      event.preventDefault();
-      window.location.href = 'admin-login.html';
-    });
-  }
+  // if (logoutBtn) {
+  //   logoutBtn.addEventListener('click', function (event) {
+  //     event.preventDefault();
+  //     window.location.href = 'admin-login.html';
+  //   });
+  // }
 
   document.addEventListener('click', function (event) {
     if (!profileBtn?.contains(event.target) && !profileMenu?.contains(event.target)) {
