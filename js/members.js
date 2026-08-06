@@ -456,6 +456,13 @@ Let's crush your fitness goals together! 🔥
 
 If you have any questions about your membership, we're here to help.
 
+⭐ We value every member's feedback.
+
+Whenever you feel comfortable sharing your experience, we'd be grateful if you could leave us a Google Review.
+
+🌟 Leave us a Google Review:
+https://g.page/r/CRCdZn5sHbnTEBM/review
+
 — Team Freaks Arena 🧡`;
 }
 
