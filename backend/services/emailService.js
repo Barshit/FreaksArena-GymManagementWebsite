@@ -1,27 +1,20 @@
 const nodemailer = require('nodemailer');
 
 
-
 const transporter = nodemailer.createTransport({
-  host: '74.125.69.109', // Gmail SMTP IPv4
-  port: 587,
-  secure: false,
-  requireTLS: true,
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  tls: {
-    servername: 'smtp.gmail.com',
-  },
 });
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('Email transporter error:', error);
-  } else {
-    console.log('Email service is ready.');
-  }
-});
+// transporter.verify((error, success) => {
+//   if (error) {
+//     console.error('Email transporter error:', error);
+//   } else {
+//     console.log('Email service is ready.');
+//   }
+// });
 async function sendEnquiryEmail(enquiry) {
   const mailOptions = {
     from: `"Freaks Arena Website" <${process.env.EMAIL_USER}>`,
