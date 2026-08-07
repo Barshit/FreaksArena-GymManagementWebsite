@@ -1,5 +1,7 @@
 require('dotenv').config();
+const dns = require('node:dns');
 
+dns.setDefaultResultOrder('ipv4first');
 const noCacheMiddleware = require('./middleware/noCache');
 const { csrfSync } = require('csrf-sync');
 const express = require('express');
