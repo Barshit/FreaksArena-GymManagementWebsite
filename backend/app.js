@@ -116,6 +116,9 @@ const allowedOrigins = [
   // Live Server
   'http://localhost:5500',
   'http://127.0.0.1:5500',
+
+  'https://freaksarena-gymmanagementwebsite-1.onrender.com',
+'https://freaksarena-gymmanagementwebsite.onrender.com',
 ];
 
 app.use(cors({
@@ -229,9 +232,15 @@ const startServer = async () => {
     
     // CSRF protection for protected routes
     app.use((req, res, next) => {
-      res.locals.csrfToken = generateToken(req);
-      next();
-    });
+  try {
+    res.locals.csrfToken = generateToken(req);
+    next();
+  } catch (err) {
+    console.error("CSRF TOKEN ERROR");
+    console.error(err);
+    next(err);
+  }
+});
     app.use(csrfSynchronisedProtection);
     
     // Session validation for protected API routes (POST/PUT/DELETE/PATCH only)
