@@ -1,7 +1,9 @@
 // Backend URL configuration
-const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000' 
-  : 'https://freaksarena-gymmanagementwebsite-1.onrender.com';
+const BACKEND_URL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : "https://freaksarena-gymmanagementwebsite-1.onrender.com";
 
 const topBtn = document.getElementById("topBtn");
 const navbar = document.querySelector(".navbar");
@@ -41,7 +43,11 @@ const navbar = document.querySelector(".navbar");
       }
 
       // Redirect to admin login
-      window.location.href = `${BACKEND_URL}/admin-login`;
+      window.open(
+        `${BACKEND_URL}/admin-login`,
+        "_blank",
+        "noopener,noreferrer",
+      );
     }
   });
 })();
