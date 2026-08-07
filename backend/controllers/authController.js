@@ -142,7 +142,10 @@ const login = async (req, res) => {
       });
     });
   } catch (error) {
-    console.error('Authentication error:', error);
+  console.error("========== LOGIN ERROR ==========");
+  console.error(error);
+  console.error(error.stack);
+  console.error("================================");
     return res.status(500).render('admin-login', {
       extraHead: '',
       title: 'Admin Login | Freaks Arena Gym',
