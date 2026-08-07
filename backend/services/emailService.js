@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
 
 
-const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
   host: '74.125.69.109', // Gmail SMTP IPv4
