@@ -107,20 +107,20 @@ app.use(globalRateLimiter);
 
 // CORS configuration for frontend with dynamic origin handling
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:3000',
+  
+  'https://freaks-arena-gym-management-website.vercel.app',
   'http://localhost:3000',
-  'http://localhost:5173', // Vite dev server
+  'http://localhost:5173',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:5173',
-
-  // Live Server
   'http://localhost:5500',
   'http://127.0.0.1:5500',
-
   'https://freaksarena-gymmanagementwebsite-1.onrender.com',
-'https://freaksarena-gymmanagementwebsite.onrender.com',
+  'https://freaksarena-gymmanagementwebsite.onrender.com',
+  
 ];
-
+console.log("FRONTEND_URL from ENV:", process.env.FRONTEND_URL);
+console.log("Allowed Origins:", allowedOrigins);
 app.use(cors({
   origin: function (origin, callback) {
     console.log("Incoming Origin:", origin);
