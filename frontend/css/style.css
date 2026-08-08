@@ -1966,7 +1966,7 @@ backdrop-filter:blur(18px);
 border:1px solid rgba(212,175,55,.18);
     border-radius:30px;
 
-    overflow:visible;
+    overflow:hidden;
 
 
     position:relative;   /* ← Add this line */
@@ -2052,8 +2052,12 @@ background:linear-gradient(
 
 @media (max-width: 700px) {
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:1fr;
+    width: 100%;
+    box-sizing: border-box;
+    gap:0;
   }
+  
 
   .stat-card {
     border-right: none !important;
