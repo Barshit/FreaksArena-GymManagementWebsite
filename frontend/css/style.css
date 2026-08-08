@@ -86,7 +86,128 @@ body {
 .skip-link:focus {
   top: 12px;
 }
+/* Subtle heartbeat for Google rating */
+.rating-heartbeat {
+    animation: ratingHeartbeat 2.2s ease-in-out infinite;
+    transform-origin: center;
+}
 
+@keyframes ratingHeartbeat {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    10% {
+        transform: scale(1.06);
+    }
+
+    20% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.04);
+    }
+
+    40%,
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Parking P — subtle acceleration effect */
+.parking-letter {
+    position: relative;
+    display: inline-block;
+}
+
+.parking-p {
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    transform-origin: center bottom;
+    animation: parkingMove 4s ease-in-out infinite;
+}
+
+/* Wind streaks behind the P */
+.wind-trail,
+.wind-trail::before,
+.wind-trail::after {
+    position: absolute;
+    content: "";
+    height: 2px;
+    border-radius: 10px;
+    background: currentColor;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.wind-trail {
+    width: 24px;
+    left: -25px;
+    top: 58%;
+    animation: windTrail 4s ease-in-out infinite;
+}
+
+.wind-trail::before {
+    width: 15px;
+    left: -10px;
+    top: -7px;
+    animation: windTrail 4s ease-in-out infinite;
+    animation-delay: 0.05s;
+}
+
+.wind-trail::after {
+    width: 18px;
+    left: -6px;
+    top: 7px;
+    animation: windTrail 4s ease-in-out infinite;
+    animation-delay: 0.1s;
+}
+
+@keyframes parkingMove {
+    0%,
+    72%,
+    100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    76% {
+        transform: translateX(2px) rotate(-3deg);
+    }
+
+    79% {
+        transform: translateX(5px) rotate(2deg);
+    }
+
+    82% {
+        transform: translateX(8px) rotate(-1deg);
+    }
+
+    86% {
+        transform: translateX(0) rotate(0deg);
+    }
+}
+
+@keyframes windTrail {
+    0%,
+    70%,
+    100% {
+        opacity: 0;
+        transform: translateX(8px);
+    }
+
+    76% {
+        opacity: 0.5;
+        transform: translateX(0);
+    }
+
+    84% {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+}
 /* Consistent, visible keyboard focus ring across interactive elements */
 a:focus-visible,
 button:focus-visible,
