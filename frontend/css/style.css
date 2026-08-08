@@ -1930,7 +1930,12 @@ transform: translateY(-33px);
   font-size: 0.9rem;
   letter-spacing: 1px;
 }
-
+.stat-card .stat-number {
+    display: inline-block;
+    min-width: 4.5em;
+    text-align: center;
+    white-space: nowrap;
+}
 .stats-section{
     padding:120px 8%;
 
