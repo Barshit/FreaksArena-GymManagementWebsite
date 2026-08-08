@@ -255,7 +255,10 @@ header {
 }
 
 .hero-content {
-  max-width: 650px;
+   max-width: 650px;
+    position: relative;
+    top: 40px;
+
 }
 
 .hero h4 {
@@ -277,8 +280,38 @@ header {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 0 16px var(--gold-glow));
+   display: block;
+    opacity: 0;
+    transform: translateY(25px);
+    animation: heroLineReveal 0.7s ease-out forwards;
+}
+/* Hero heading entrance animation */
+/* Hero text line-by-line entrance */
+
+
+.hero h1 span:nth-child(1) {
+    animation-delay: 0.1s;
 }
 
+.hero h1 span:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.hero h1 span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes heroLineReveal {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 .hero p {
   color: var(--text-muted);
   font-size: 1.1rem;
