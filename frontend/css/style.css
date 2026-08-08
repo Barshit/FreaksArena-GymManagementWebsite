@@ -116,7 +116,7 @@ body {
     }
 }
 
-/* Parking P — subtle acceleration effect */
+/* Parking indicator */
 .parking-letter {
     position: relative;
     display: inline-block;
@@ -126,11 +126,9 @@ body {
     display: inline-block;
     position: relative;
     z-index: 2;
-    transform-origin: center bottom;
-    animation: parkingMove 5s ease-in-out infinite;
 }
 
-/* Wind streaks behind the P */
+/* Continuous wind behind P */
 .wind-trail,
 .wind-trail::before,
 .wind-trail::after {
@@ -139,75 +137,50 @@ body {
     height: 2px;
     border-radius: 10px;
     background: currentColor;
-    opacity: 0;
     pointer-events: none;
+    opacity: 0;
 }
 
 .wind-trail {
-    width: 24px;
-    left: -25px;
+    width: 26px;
+    left: -28px;
     top: 58%;
-    animation: windTrail 4s ease-in-out infinite;
+    animation: windFlow 0.9s linear infinite;
 }
 
 .wind-trail::before {
-    width: 15px;
-    left: -10px;
+    width: 18px;
+    left: -9px;
     top: -7px;
-    animation: windTrail 4s ease-in-out infinite;
-    animation-delay: 0.05s;
+    animation: windFlow 0.9s linear infinite;
+    animation-delay: 0.15s;
 }
 
 .wind-trail::after {
-    width: 18px;
-    left: -6px;
+    width: 22px;
+    left: -5px;
     top: 7px;
-    animation: windTrail 4s ease-in-out infinite;
-    animation-delay: 0.1s;
+    animation: windFlow 0.9s linear infinite;
+    animation-delay: 0.3s;
 }
 
-@keyframes parkingMove {
-    0%,
-    92%,
-    100% {
-        transform: translateX(0) rotate(0deg);
+@keyframes windFlow {
+    0% {
+        opacity: 0;
+        transform: translateX(12px);
     }
 
-    93% {
-        transform: translateX(2px) rotate(-3deg);
+    25% {
+        opacity: 0.45;
     }
 
-    94% {
-        transform: translateX(6px) rotate(2deg);
-    }
-
-    95% {
-        transform: translateX(9px) rotate(-1deg);
-    }
-
-    96% {
-        transform: translateX(0) rotate(0deg);
-    }
-}
-
-@keyframes windTrail {
-    0%,
-    70%,
     100% {
         opacity: 0;
-        transform: translateX(8px);
-    }
-
-    76% {
-        opacity: 0.5;
-        transform: translateX(0);
-    }
-
-    84% {
-        opacity: 0;
-        transform: translateX(-15px);
+        transform: translateX(-22px);
     }
 }
+
+
 /* Consistent, visible keyboard focus ring across interactive elements */
 a:focus-visible,
 button:focus-visible,
@@ -2055,20 +2028,4 @@ background:linear-gradient(
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
-.parking-letter{
-    width:70px;
-    height:70px;
 
-    border:3px solid #D4AF37;
-    border-radius:18px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    margin:auto;
-
-    font-size:2.6rem;
-    font-weight:700;
-    color:#D4AF37;
-}
