@@ -2050,7 +2050,7 @@ background:linear-gradient(
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .stats-grid {
     grid-template-columns:1fr;
     width: 100%;
