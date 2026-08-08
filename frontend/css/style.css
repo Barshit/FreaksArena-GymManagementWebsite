@@ -1966,7 +1966,7 @@ backdrop-filter:blur(18px);
 border:1px solid rgba(212,175,55,.18);
     border-radius:30px;
 
-    overflow:hidden;
+    overflow:visible;
 
 
     position:relative;   /* ← Add this line */
