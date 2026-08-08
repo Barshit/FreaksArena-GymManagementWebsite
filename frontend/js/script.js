@@ -750,3 +750,50 @@ document.addEventListener("keydown", (e) => {
     focusable[nextIdx].focus();
   }
 });
+
+// Stats counter animation
+const statNumbers = document.querySelectorAll(".stat-number");
+
+const statsObserver = new IntersectionObserver(
+    (entries, observer) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            const counter = entry.target;
+            const target = Number(counter.dataset.target);
+            const duration = 1200;
+            const startTime = performance.now();
+
+            function updateCounter(currentTime) {
+                const progress = Math.min(
+                    (currentTime - startTime) / duration,
+                    1
+                );
+
+                // Smooth ease-out effect
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+                const currentValue = Math.floor(target * easedProgress);
+
+                counter.textContent =
+                    currentValue.toLocaleString() +
+                    (target === 6 ? "" : "+");
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+
+            // Run only once
+            observer.unobserve(counter);
+        });
+    },
+    {
+        threshold: 0.5
+    }
+);
+
+statNumbers.forEach((counter) => {
+    statsObserver.observe(counter);
+});
