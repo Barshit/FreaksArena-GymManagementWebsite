@@ -109,14 +109,18 @@ app.use(globalRateLimiter);
 
 // CORS configuration for frontend with dynamic origin handling
 const allowedOrigins = [
-  
+  'https://freaksarena.in',
+  'https://www.freaksarena.in',
+  //old vercel
   'https://freaks-arena-gym-management-website.vercel.app',
+  //local dev
   'http://localhost:3000',
   'http://localhost:5173',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:5173',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
+  //render url
   'https://freaksarena-gymmanagementwebsite-1.onrender.com',
   'https://freaksarena-gymmanagementwebsite.onrender.com',
   

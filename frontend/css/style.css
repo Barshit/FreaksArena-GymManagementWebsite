@@ -2054,7 +2054,7 @@ background:linear-gradient(
   .stats-grid {
     grid-template-columns:1fr;
     width: 100%;
-    box-sizing: border-box;
+    kobox-sizing: border-box;
     gap:0;
   }
   
