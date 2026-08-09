@@ -1,6 +1,14 @@
 html,
 body {
     overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+input,
+textarea,
+select {
+    user-select: text;
+    -webkit-user-select: text;
 }
 * {
   margin: 0;
